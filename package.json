@@ -35,6 +35,7 @@
     "build": "tsc -p tsconfig.json",
     "openapi:lint": "redocly lint openapi.yaml",
     "openapi:build": "redocly build-docs openapi.yaml --output=openapi/index.html",
+    "alignment:cross-spec": "node scripts/cross-spec-align.mjs --config gidas-alignment.config.json",
     "test": "npm run build && node test/run-coverage.mjs && node test/e2e/run.mjs",
     "bench": "npm run build && node benchmark/bench.js",
     "prepare": "husky",

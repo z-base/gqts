@@ -1,0 +1,43 @@
+{
+  "self": {
+    "specId": "GQTS-CORE",
+    "repo": "z-base/gqts",
+    "homeUrl": "https://z-base.github.io/gqts/"
+  },
+  "peers": [
+    {
+      "specId": "GDIS-CORE",
+      "repo": "z-base/gdis",
+      "homeUrl": "https://z-base.github.io/gdis/",
+      "localSnapshotPaths": [
+        "../gdis/index.html",
+        "../gdis/openapi.yaml",
+        "../.gidas-peers/gdis/index.html",
+        "../.gidas-peers/gdis/openapi.yaml"
+      ]
+    },
+    {
+      "specId": "GQSCD-CORE",
+      "repo": "z-base/gqscd",
+      "homeUrl": "https://z-base.github.io/gqscd/",
+      "localSnapshotPaths": [
+        "../gqscd/index.html",
+        "../gqscd/openapi.yaml",
+        "../.gidas-peers/gqscd/index.html",
+        "../.gidas-peers/gqscd/openapi.yaml"
+      ]
+    },
+    {
+      "specId": "GQTS-CORE",
+      "repo": "z-base/gqts",
+      "homeUrl": "https://z-base.github.io/gqts/",
+      "localSnapshotPaths": [
+        "./index.html",
+        "./openapi.yaml",
+        "../.gidas-peers/gqts/index.html",
+        "../.gidas-peers/gqts/openapi.yaml"
+      ]
+    }
+  ],
+  "outputDir": ".gidas/alignment"
+}

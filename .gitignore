@@ -13,6 +13,7 @@ lerna-debug.log*
 coverage/
 .nyc_output/
 test-results/
+.gidas/alignment/
 
 .env
 .env.*.local
