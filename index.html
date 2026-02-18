@@ -96,6 +96,69 @@
       </p>
     </section>
 
+    <section id="positioning-adoption-model" class="informative">
+      <h2>Positioning and Adoption Model</h2>
+      <p>
+        This section states stakeholder adoption pathways as a mapping from objective to required
+        artifacts and verifier-observable outcomes.
+      </p>
+      <table class="simple tight">
+        <thead>
+          <tr>
+            <th>Stakeholder</th>
+            <th>Goal</th>
+            <th>Required Artifact/Interface</th>
+            <th>Verifier Behavior</th>
+            <th>Adoption Pathway</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Device and platform manufacturers</td>
+            <td>Provide auditable key-custody and signer-intent evidence surfaces.</td>
+            <td>Controller/key evidence objects and integrity proofs exposed through GQTS logs.</td>
+            <td>Verify proof chains, key-state continuity, and event-history integrity.</td>
+            <td>Publish conformance targets and expose machine-verifiable evidence interfaces.</td>
+          </tr>
+          <tr>
+            <td>Wallet and application implementers</td>
+            <td>Implement end-user controlled signing and attestation workflows.</td>
+            <td>Event envelopes, proof objects, and service descriptors conforming to OpenAPI schemas.</td>
+            <td>Validate deterministic event processing and proof verification outcomes.</td>
+            <td>Ship profile-conformant interfaces and publish conformance evidence artifacts.</td>
+          </tr>
+          <tr>
+            <td>Standards development organizations</td>
+            <td>Define interoperable profiles and test suites.</td>
+            <td>Profile constraints, test assertions, and registry/discovery policies.</td>
+            <td>Execute profile test assertions against normative schemas and algorithms.</td>
+            <td>Publish profile work items and normative deltas over GQTS Core.</td>
+          </tr>
+          <tr>
+            <td>Governments and regulators</td>
+            <td>Publish authoritative policy and recognition inputs.</td>
+            <td>Authoritative registries, trusted lists, and governance discovery endpoints.</td>
+            <td>Separate cryptographic validity outputs from legal recognition outputs.</td>
+            <td>Adopt compatibility mappings without changing core cryptographic semantics.</td>
+          </tr>
+          <tr>
+            <td>Auditors, CABs, and assessors</td>
+            <td>Evaluate conformance using machine-verifiable evidence.</td>
+            <td>Conformance reports, test transcripts, and evidence artifacts bound to requirement IDs.</td>
+            <td>Check requirement-level traceability and deterministic failure handling.</td>
+            <td>Issue assessment outputs bound to reproducible verification procedures.</td>
+          </tr>
+          <tr>
+            <td>Verifiers and relying parties</td>
+            <td>Make deterministic acceptance decisions from evidence.</td>
+            <td>Scheme/type/event retrieval endpoints and policy input registries.</td>
+            <td>Execute verifier algorithm and reject unverifiable or inconsistent states.</td>
+            <td>Integrate GQTS retrieval and verification as a policy-separated trust layer.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <section id="framework-naming">
       <h2>Framework Naming</h2>
       <ul>
@@ -205,7 +268,7 @@
       </p>
       <p>
         Endpoint semantics are normative in <a href="./openapi.yaml">`./openapi.yaml`</a>
-        (OpenAPI 3.1). Rendered documentation is available at
+        (OpenAPI 3.1.2). Rendered documentation is available at
         <a href="./openapi/">`./openapi/`</a>.
       </p>
       <p>
@@ -262,7 +325,7 @@
                   ><code>postEventIngest</code></a
                 >
               </td>
-              <td>Submit a gossip/ingest event asynchronously (`202 Accepted`).</td>
+              <td>Submit an ingest event; acceptance and state-transition semantics are normative in OpenAPI.</td>
             </tr>
             <tr>
               <td>
@@ -352,12 +415,29 @@
           </li>
           <li>
             <a
+              id="schema-ErrorCode"
+              href="./openapi.yaml#/components/schemas/ErrorCode"
+              ><code>ErrorCode</code></a
+            >
+          </li>
+          <li>
+            <a
               id="schema-AsyncReceipt"
               href="./openapi.yaml#/components/schemas/AsyncReceipt"
               ><code>AsyncReceipt</code></a
             >
           </li>
         </ul>
+      </section>
+
+      <section id="media-type-governance">
+        <h3>Media Type Governance</h3>
+        <p>
+          Media types in this profile follow RFC 6838
+          <a href="#ref-rfc6838">[RFC6838]</a> and use the structured syntax suffix
+          <code>+json</code> where semantics are JSON. Profile revisions MUST preserve backward
+          compatibility expectations or publish a versioned media-type change policy.
+        </p>
       </section>
 
       <section id="endpoint-kind-taxonomy">
@@ -424,47 +504,47 @@
         `openapi.yaml`.
       </p>
       <ol>
-        <li id="req-r1">
-          <strong>REQ-R1 Discovery Scope</strong>:
+        <li id="req-gqts-01">
+          <strong>REQ-GQTS-01 Discovery Scope</strong>:
           Implementations MUST support governance-scoped discovery via
           <a href="#op-getSchemeDescriptor"><code>getSchemeDescriptor</code></a>
           and schema constraints in
           <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>.
         </li>
-        <li id="req-r2">
-          <strong>REQ-R2 Endpoint-Kind Publication</strong>:
+        <li id="req-gqts-02">
+          <strong>REQ-GQTS-02 Endpoint-Kind Publication</strong>:
           Implementations MUST publish endpoint-kind mapping material via
           <a href="#op-getEndpointKindCatalog"><code>getEndpointKindCatalog</code></a>
           conforming to
           <a href="#schema-EndpointKindCatalog"><code>EndpointKindCatalog</code></a>.
         </li>
-        <li id="req-r3">
-          <strong>REQ-R3 Service Descriptor Integrity</strong>:
+        <li id="req-gqts-03">
+          <strong>REQ-GQTS-03 Service Descriptor Integrity</strong>:
           Implementations MUST expose current service head commitments through
           <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a> using
           <a href="#schema-ServiceDescriptor"><code>ServiceDescriptor</code></a>.
         </li>
-        <li id="req-r4">
-          <strong>REQ-R4 Low-Cost Divergence Detection</strong>:
+        <li id="req-gqts-04">
+          <strong>REQ-GQTS-04 Low-Cost Divergence Detection</strong>:
           Verifiers and peers SHOULD compare compact head commitments via
           <a href="#op-getEventHeadMeta"><code>getEventHeadMeta</code></a> before heavy sync work.
         </li>
-        <li id="req-r5">
-          <strong>REQ-R5 Append-Only Retrieval</strong>:
+        <li id="req-gqts-05">
+          <strong>REQ-GQTS-05 Append-Only Retrieval</strong>:
           Event history retrieval MUST use
           <a href="#op-getEventLogView"><code>getEventLogView</code></a> and
           <a href="#schema-EventLogView"><code>EventLogView</code></a>, preserving append-only
           interpretation rules.
         </li>
-        <li id="req-r6">
-          <strong>REQ-R6 Asynchronous Ingest</strong>:
+        <li id="req-gqts-06">
+          <strong>REQ-GQTS-06 Asynchronous Ingest</strong>:
           Event ingest/gossip MUST be modeled as asynchronous acceptance through
-          <a href="#op-postEventIngest"><code>postEventIngest</code></a> returning
-          <code>202 Accepted</code> and
+          <a href="#op-postEventIngest"><code>postEventIngest</code></a> and corresponding
+          ingestion-receipt objects represented by
           <a href="#schema-AsyncReceipt"><code>AsyncReceipt</code></a>.
         </li>
-        <li id="req-r7">
-          <strong>REQ-R7 Immutable Event Addressing</strong>:
+        <li id="req-gqts-07">
+          <strong>REQ-GQTS-07 Immutable Event Addressing</strong>:
           Event-object retrieval MUST use
           <a href="#op-getEventById"><code>getEventById</code></a> and validate
           <a href="#schema-EventEnvelope"><code>EventEnvelope</code></a>.
@@ -511,8 +591,8 @@
       <section id="mandate-openapi">
         <h3>OpenAPI Contract Authority</h3>
         <p>
-          Endpoint behavior is authoritative in OpenAPI 3.1
-          <a href="#ref-openapi31">[OPENAPI-3.1]</a>. ReSpec prose in this document is
+          Endpoint behavior is authoritative in OpenAPI 3.1.2
+          <a href="#ref-openapi31">[OPENAPI-3.1.2]</a>. ReSpec prose in this document is
           interpretive for invariants and verifier processing only.
         </p>
       </section>
@@ -615,6 +695,87 @@
         Trust decisions MUST consume both outputs. A positive mechanical result without an
         accepted governance source yields cryptographic validity only.
       </p>
+      <p>
+        Deterministic processing requirements: verifiers MUST apply the canonicalization and hash
+        algorithm declared by
+        <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>; MUST recompute and
+        compare <code>eventDigest</code> and parent commitment tuples for each processed event;
+        MUST verify every event proof against its declared cryptosuite profile; and MUST emit a
+        deterministic failure code from <a href="#schema-ErrorCode"><code>ErrorCode</code></a>
+        whenever any required check fails.
+      </p>
+    </section>
+
+    <section id="proof-profile-baseline">
+      <h2>Proof Profile Baseline</h2>
+      <p>
+        Unless a profile explicitly overrides this behavior, proof objects for event integrity
+        MUST follow the VC Data Integrity proof model
+        <a href="#ref-vc-data-integrity">[VC-DATA-INTEGRITY]</a> and MUST include
+        <code>type</code>, <code>cryptosuite</code>, and <code>proofValue</code>. ECDSA profiles
+        MUST align identifiers and verification rules with
+        <a href="#ref-vc-di-ecdsa">[VC-DI-ECDSA]</a>.
+      </p>
+      <p>
+        Verification method resolution SHOULD align with Controlled Identifiers
+        <a href="#ref-controller-document">[CONTROLLER-DOCUMENT]</a>.
+      </p>
+      <p>
+        Proof verification MUST be deterministic: canonicalization input, hash input, signature
+        input, and verification method resolution MUST produce identical acceptance outcomes for
+        identical artifacts.
+      </p>
+    </section>
+
+    <section id="failure-semantics">
+      <h2>Verification Failure Semantics</h2>
+      <p>
+        Verification failures MUST be reported using deterministic error codes represented by
+        <a href="#schema-ErrorCode"><code>ErrorCode</code></a> and conveyed through
+        <code>ProblemDetails.code</code>.
+      </p>
+      <table class="simple tight">
+        <thead>
+          <tr>
+            <th>Error Code</th>
+            <th>Failure Condition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ERR_SCHEMA_VALIDATION</code></td>
+            <td>Input object fails schema or required-field constraints.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_CANONICALIZATION_FAILURE</code></td>
+            <td>Canonicalization cannot be completed deterministically.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_DIGEST_MISMATCH</code></td>
+            <td>Digest tuple or hash-chain commitment does not match recomputed value.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_UNSUPPORTED_CRYPTOSUITE</code></td>
+            <td>Proof declares a cryptosuite not supported by the verifier profile.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_PROOF_VERIFICATION_FAILED</code></td>
+            <td>Cryptographic proof verification returns invalid.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_HISTORY_DIVERGENCE_UNRESOLVED</code></td>
+            <td>Multiple heads persist without a valid merge event under profile rules.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_POLICY_INPUT_UNAVAILABLE</code></td>
+            <td>Required external governance input cannot be resolved.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_POLICY_REJECTED</code></td>
+            <td>Policy-layer checks reject an otherwise mechanically valid artifact.</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
     <section id="design-proposal">
@@ -684,6 +845,23 @@
           scheme descriptors and keeps profile declarations consistent with the OpenAPI schema
           contracts.
         </p>
+      </section>
+
+      <section id="conformance-reporting">
+        <h3>Conformance Reporting Requirements</h3>
+        <p>
+          A conformance claim MUST be accompanied by a machine-readable conformance report with at
+          least the following fields:
+        </p>
+        <ul>
+          <li>implementation identifier and version;</li>
+          <li>declared conformance class set;</li>
+          <li>requirement coverage list (`REQ-GQTS-xx` identifiers);</li>
+          <li>test assertion identifiers and execution results;</li>
+          <li>cryptosuite support declaration and verification profile;</li>
+          <li>failure-code coverage for negative tests using `ErrorCode` values;</li>
+          <li>policy input sources used during recognition-status evaluation.</li>
+        </ul>
       </section>
     </section>
 
@@ -755,6 +933,11 @@
               >[RFC8174] Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a
             >
           </li>
+          <li id="ref-rfc6838">
+            <a href="https://www.rfc-editor.org/rfc/rfc6838"
+              >[RFC6838] Media Type Specifications and Registration Procedures</a
+            >
+          </li>
           <li id="ref-rfc8615">
             <a href="https://www.rfc-editor.org/rfc/rfc8615"
               >[RFC8615] Well-Known Uniform Resource Identifiers (URIs)</a
@@ -769,13 +952,34 @@
             >
           </li>
           <li id="ref-openapi31">
-            <a href="https://spec.openapis.org/oas/v3.1.0.html"
-              >[OPENAPI-3.1] OpenAPI Specification v3.1.0</a
+            <a href="https://spec.openapis.org/oas/v3.1.2.html"
+              >[OPENAPI-3.1.2] OpenAPI Specification v3.1.2</a
             >
           </li>
           <li id="ref-iana-wku">
             <a href="https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml"
               >[IANA-WKU] IANA Well-Known URI Registry</a
+            >
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Proof And Controller References</h3>
+        <ul>
+          <li id="ref-controller-document">
+            <a href="https://www.w3.org/TR/cid-1.0/"
+              >[CONTROLLER-DOCUMENT] Controlled Identifiers v1.0</a
+            >
+          </li>
+          <li id="ref-vc-data-integrity">
+            <a href="https://www.w3.org/TR/vc-data-integrity/"
+              >[VC-DATA-INTEGRITY] Verifiable Credential Data Integrity 1.0</a
+            >
+          </li>
+          <li id="ref-vc-di-ecdsa">
+            <a href="https://www.w3.org/TR/vc-di-ecdsa/"
+              >[VC-DI-ECDSA] Data Integrity ECDSA Cryptosuites v1.0</a
             >
           </li>
         </ul>
