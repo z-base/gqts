@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/z-base/gqts/branch/master/graph/badge.svg)](https://codecov.io/gh/z-base/gqts)
 [![license](https://img.shields.io/npm/l/@z-base/gqts)](LICENSE)
 
-1. Title
+1. Titl
 
 # gqts
 
