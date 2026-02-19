@@ -247,7 +247,9 @@
           <a href="#ref-gdis-core">[GDIS-CORE]</a>, and GQSCD defines device/controller assurance
           evidence objects <a href="#ref-gqscd-core">[GQSCD-CORE]</a>. GQTS defines host, event-log,
           and deterministic verification behavior for those artifacts without redefining their
-          component-specific semantics.
+          component-specific semantics. Wallet-private proof artifacts remain outside GQTS storage
+          scope; GQTS publishes public verification material and optional blinded verification
+          references only.
         </p>
 
         <p class="informative">
@@ -361,6 +363,7 @@
       <p>This specification does not:</p>
       <ul>
         <li>create legal qualification by itself;</li>
+        <li>store or restate wallet-private claims, credentials, or private proof witnesses;</li>
         <li>replace jurisdictional trusted lists or statutory registries;</li>
         <li>mandate one storage engine, one host operator, or one governance authority.</li>
       </ul>
@@ -387,6 +390,13 @@
           canonicalization profile, and publication floor requirements.
         </dd>
 
+        <dt><dfn>verification material</dfn></dt>
+        <dd>
+          Publicly retrievable trust data used by verifiers, including verification methods,
+          controller references, status metadata, and signed event history. Wallet-private claims
+          are out of scope.
+        </dd>
+
         <dt><dfn>event namespace</dfn></dt>
         <dd>
           A scoped signed-token stream identified by a log identifier where entries form an
@@ -403,6 +413,13 @@
         <dd>
           A signed token that reconciles competing candidate heads while preserving one canonical
           previous-token pointer in the accepted chain.
+        </dd>
+
+        <dt><dfn>bad node</dfn></dt>
+        <dd>
+          A candidate event entry that fails deterministic acceptance checks (for example schema,
+          previous-token linkage, key-lineage constraints, or proof verification) and is therefore
+          rejected from accepted history.
         </dd>
 
         <dt><dfn>mechanical validity</dfn></dt>
@@ -799,8 +816,16 @@
         <ul>
           <li>History MUST be append-only; corrections are new events.</li>
           <li>
+            The first accepted event in an <a>event namespace</a> MUST be a genesis/root event
+            that establishes the initial verification method.
+          </li>
+          <li>
             This version defines no history-compaction mechanism; accepted events and proof
             material remain verification inputs while they are published by the controller.
+          </li>
+          <li>
+            Each non-genesis accepted event MUST link to the previously accepted head and MUST be
+            signature-valid under the currently active verification method lineage.
           </li>
           <li>Divergence MUST be detectable through differing <a>head token</a> values.</li>
           <li>
@@ -814,6 +839,10 @@
           <li>
             Verification MUST be mechanical: canonicalization, token-link checks, and proof checks
             are deterministic.
+          </li>
+          <li>
+            Entries that fail deterministic checks MUST be classified as a <a>bad node</a> and
+            MUST be rejected from accepted history.
           </li>
           <li>
             Hosts MUST NOT trigger heavy merge work unless a <a>head token</a> mismatch is
@@ -834,7 +863,7 @@
           Admission control is protocol-validity based: hosts MUST validate incoming event objects
           against applicable OpenAPI schema constraints and proof-verification requirements before
           acceptance. Invalid entries MUST be rejected and MUST NOT be merged into accepted
-          history.
+          history; when reporting endpoints exist, hosts SHOULD expose bad-node diagnostics.
         </p>
       </section>
 
@@ -852,6 +881,7 @@
         <h3>Threat Model Honesty</h3>
         <ul>
           <li>Client and network environments are hostile by default.</li>
+          <li>Wallet-private proof artifacts are outside the GQTS trust boundary.</li>
           <li>Governance allowlists are policy signals, not cryptographic enforcement.</li>
           <li>
             "Approved list" claims MUST NOT be treated as technical guarantees without
@@ -879,7 +909,12 @@
         </li>
         <li>
           If <a>head token</a> values differ, fetch only missing chain segments and validate
-          canonicalization, previous-token linkage, and proof material for each candidate head.
+          canonicalization, previous-token linkage, root-to-head verification-method lineage, and
+          proof material for each candidate head.
+        </li>
+        <li>
+          Classify any candidate entry that fails deterministic checks as a <a>bad node</a>,
+          reject it from accepted history, and optionally report it.
         </li>
         <li>
           Accept merge only when represented as an explicit <a>merge token</a> that reconciles

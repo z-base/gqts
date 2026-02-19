@@ -689,6 +689,9 @@ components:
       description: |
         Signed history token.
         Acceptance is determined by schema validity, directed linear chain-link validity, and proof verification.
+        The genesis token establishes the root verification method for the event namespace.
+        Non-genesis tokens MUST validate against the active verification-method lineage rooted at genesis.
+        Payload content is limited to public verification material; wallet-private claims and secret witnesses are out of scope.
         Standalone content-hash claims are ignored by protocol.
       additionalProperties: false
       required:
@@ -763,6 +766,9 @@ components:
           description: Optional endpoint for reporting invalid token candidates.
         blindVerificationMaterial:
           type: object
+          description: |
+            Optional blinded verification data references.
+            MUST NOT include unblinded secrets, private keys, or wallet-private claim content.
           additionalProperties: false
           properties:
             scheme:
@@ -776,6 +782,9 @@ components:
               additionalProperties: true
         payload:
           type: object
+          description: |
+            Public verification material asserted by this token.
+            MUST NOT carry wallet-private credentials, private claims, or private proof witnesses.
           additionalProperties: true
         proofs:
           type: array
