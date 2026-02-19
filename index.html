@@ -108,57 +108,73 @@
   <body>
     <section id="abstract">
       <p>
-        This document specifies <strong>GQTS Core</strong> as a protocol profile for publishing
-        trust-service verification material under the GIDAS framework.
+        This document specifies <strong>GQTS Core</strong> as a protocol profile
+        for publishing trust-service verification material under the GIDAS
+        framework.
       </p>
       <p>
-        GQTS Core defines discovery, append-only directed linear signed-token history invariants,
-        merge-reconciliation semantics, and a deterministic verifier algorithm. Endpoint contracts
-        are normative in <a href="./openapi.yaml">openapi.yaml</a> and rendered at
+        GQTS Core defines discovery, append-only directed linear signed-token
+        history invariants, merge-reconciliation semantics, and a deterministic
+        verifier algorithm. Endpoint contracts are published in
+        <a href="./openapi.yaml">openapi.yaml</a> and rendered at
         <a href="./openapi/">./openapi/</a>.
       </p>
     </section>
 
     <section id="sotd">
-      <p>This is an Editor's Draft.</p>
+      <p>This is an unofficial draft.</p>
       <p>
-        Document authority: this text is not an adopted ETSI deliverable, not a W3C Recommendation,
-        and not a legal instrument. Normative force exists only where this draft is explicitly
-        adopted by a governing standards process.
+        This document is technical and does not itself create legal recognition,
+        supervisory status, or jurisdictional qualification.
       </p>
       <p>
-        Drafting note: automated editorial tooling was used. Normative intent and acceptance are
-        controlled by human editors and explicit repository governance.
+        AI assistance disclosure: this draft used OpenAI GPT-5 Codex for
+        drafting support, structure proposals, and editorial rewrites. Human
+        editor review controls normative intent and accepted wording.
       </p>
     </section>
 
     <section id="conformance">
       <p>
-        The key words <em class="rfc2119">MUST</em>, <em class="rfc2119">MUST NOT</em>,
-        <em class="rfc2119">REQUIRED</em>, <em class="rfc2119">SHALL</em>,
-        <em class="rfc2119">SHALL NOT</em>, <em class="rfc2119">SHOULD</em>,
-        <em class="rfc2119">SHOULD NOT</em>, <em class="rfc2119">RECOMMENDED</em>,
-        <em class="rfc2119">MAY</em>, and <em class="rfc2119">OPTIONAL</em> in this document
-        are to be interpreted as described in BCP 14
+        The key words <em class="rfc2119">MUST</em>,
+        <em class="rfc2119">MUST NOT</em>, <em class="rfc2119">REQUIRED</em>,
+        <em class="rfc2119">SHALL</em>, <em class="rfc2119">SHALL NOT</em>,
+        <em class="rfc2119">SHOULD</em>, <em class="rfc2119">SHOULD NOT</em>,
+        <em class="rfc2119">RECOMMENDED</em>, <em class="rfc2119">MAY</em>, and
+        <em class="rfc2119">OPTIONAL</em> in this document are to be interpreted
+        as described in BCP 14
         <a href="#ref-rfc2119">[RFC2119]</a>
-        <a href="#ref-rfc8174">[RFC8174]</a> when, and only when, they appear in all capitals.
+        <a href="#ref-rfc8174">[RFC8174]</a> when, and only when, they appear in
+        all capitals.
       </p>
       <p>
-        Conforming implementations MUST satisfy all requirements for at least one conformance
-        class in <a href="#conformance-classes">Conformance Classes</a>.
+        Conforming implementations MUST satisfy all requirements for at least
+        one conformance class in
+        <a href="#conformance-classes">Conformance Classes</a>.
       </p>
       <p>
-        This specification defines externally observable data models, protocol outcomes, and
-        verifier algorithms. It does not define implementation architecture, runtime internals, or
-        performance strategies.
+        This specification defines externally observable data models, protocol
+        outcomes, and verifier algorithms. It does not define implementation
+        architecture, runtime internals, or performance strategies.
       </p>
     </section>
+
+    <p class="note">
+      NOTE: The <span class="mono">openapi.yaml</span> contracts are indicative
+      and are not yet normative. Official schemas will be finalized after the
+      first reference implementation.
+    </p>
 
     <section id="positioning-adoption-model" class="informative">
       <h2>Positioning and Adoption Model</h2>
       <p>
-        This section states stakeholder adoption pathways as a mapping from objective to required
-        artifacts and verifier-observable outcomes.
+        This section is informative. It expresses stakeholder adoption pathways
+        as explicit
+        <span class="mono"
+          >goal -&gt; required artifact/interface -&gt; verifier behavior -&gt;
+          adoption pathway</span
+        >
+        mappings.
       </p>
       <table class="simple tight">
         <thead>
@@ -173,45 +189,101 @@
         <tbody>
           <tr>
             <td>Device and platform manufacturers</td>
-            <td>Provide auditable key-custody and signer-intent evidence surfaces.</td>
-            <td>Controller/key evidence objects and integrity proofs exposed through GQTS logs.</td>
-            <td>Verify proof chains, key-state continuity, and event-history integrity.</td>
-            <td>Publish conformance targets and expose machine-verifiable evidence interfaces.</td>
+            <td>
+              Provide auditable key-custody and signer-intent evidence surfaces.
+            </td>
+            <td>
+              Controller/key evidence objects and integrity proofs exposed
+              through GQTS logs.
+            </td>
+            <td>
+              Verify proof chains, key-state continuity, and event-history
+              integrity.
+            </td>
+            <td>
+              Publish conformance targets and expose machine-verifiable evidence
+              interfaces.
+            </td>
           </tr>
           <tr>
             <td>Wallet and application implementers</td>
-            <td>Implement end-user controlled signing and attestation workflows.</td>
-            <td>Event envelopes, proof objects, and service descriptors conforming to OpenAPI schemas.</td>
-            <td>Validate deterministic event processing and proof verification outcomes.</td>
-            <td>Ship profile-conformant interfaces and publish conformance evidence artifacts.</td>
+            <td>
+              Implement end-user controlled signing and attestation workflows.
+            </td>
+            <td>
+              Event envelopes, proof objects, and service descriptors conforming
+              to OpenAPI schemas.
+            </td>
+            <td>
+              Validate deterministic event processing and proof verification
+              outcomes.
+            </td>
+            <td>
+              Ship profile-conformant interfaces and publish conformance
+              evidence artifacts.
+            </td>
           </tr>
           <tr>
             <td>Standards development organizations</td>
             <td>Define interoperable profiles and test suites.</td>
-            <td>Profile constraints, test assertions, and registry/discovery policies.</td>
-            <td>Execute profile test assertions against normative schemas and algorithms.</td>
-            <td>Publish profile work items and normative deltas over GQTS Core.</td>
+            <td>
+              Profile constraints, test assertions, and registry/discovery
+              policies.
+            </td>
+            <td>
+              Execute profile test assertions against normative schemas and
+              algorithms.
+            </td>
+            <td>
+              Publish profile work items and normative deltas over GQTS Core.
+            </td>
           </tr>
           <tr>
             <td>Governments and regulators</td>
             <td>Publish authoritative policy and recognition inputs.</td>
-            <td>Authoritative registries, trusted lists, and governance discovery endpoints.</td>
-            <td>Separate cryptographic validity outputs from legal recognition outputs.</td>
-            <td>Adopt compatibility mappings without changing core cryptographic semantics.</td>
+            <td>
+              Authoritative registries, trusted lists, and governance discovery
+              endpoints.
+            </td>
+            <td>
+              Separate cryptographic validity outputs from legal recognition
+              outputs.
+            </td>
+            <td>
+              Adopt compatibility mappings without changing core cryptographic
+              semantics.
+            </td>
           </tr>
           <tr>
             <td>Auditors, CABs, and assessors</td>
             <td>Evaluate conformance using machine-verifiable evidence.</td>
-            <td>Conformance reports, test transcripts, and evidence artifacts bound to requirement IDs.</td>
-            <td>Check requirement-level traceability and deterministic failure handling.</td>
-            <td>Issue assessment outputs bound to reproducible verification procedures.</td>
+            <td>
+              Conformance reports, test transcripts, and evidence artifacts
+              bound to requirement IDs.
+            </td>
+            <td>
+              Check requirement-level traceability and deterministic failure
+              handling.
+            </td>
+            <td>
+              Issue assessment outputs bound to reproducible verification
+              procedures.
+            </td>
           </tr>
           <tr>
             <td>Verifiers and relying parties</td>
             <td>Make deterministic acceptance decisions from evidence.</td>
-            <td>Scheme/type/event retrieval endpoints and policy input registries.</td>
-            <td>Execute verifier algorithm and reject unverifiable or inconsistent states.</td>
-            <td>Integrate GQTS retrieval and verification as a policy-separated trust layer.</td>
+            <td>
+              Scheme/type/event retrieval endpoints and policy input registries.
+            </td>
+            <td>
+              Execute verifier algorithm and reject unverifiable or inconsistent
+              states.
+            </td>
+            <td>
+              Integrate GQTS retrieval and verification as a policy-separated
+              trust layer.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -221,40 +293,44 @@
       <h2>Framework Naming</h2>
       <ul>
         <li>
-          <strong>GIDAS</strong> (Global Identity, Authentication, and Trust Services) is the
-          framework umbrella.
+          <strong>GIDAS</strong> (Global Identity, Authentication, and Trust
+          Services) is the framework umbrella.
         </li>
         <li>
-          <strong>GDIS</strong> (Global Digital Identity Scheme) is a component under GIDAS for
-          physical-to-digital identity binding artifacts
+          <strong>GDIS</strong> (Global Digital Identity Scheme) is a component
+          under GIDAS for physical-to-digital identity binding artifacts
           <a href="#ref-gdis-core">[GDIS-CORE]</a>.
         </li>
         <li>
-          <strong>GQSCD</strong> (Globally Qualified Signature Creation Device) is a component
-          under GIDAS for device/controller assurance evidence
+          <strong>GQSCD</strong> (Globally Qualified Signature Creation Device)
+          is a component under GIDAS for device/controller assurance evidence
           <a href="#ref-gqscd-core">[GQSCD-CORE]</a>.
         </li>
         <li>
-          <strong>GQTS Core</strong> (this specification) is the shared publication and
-          replication substrate for verifier-checkable trust-service evidence.
+          <strong>GQTS Core</strong> (this specification) is the shared
+          publication and replication substrate for verifier-checkable
+          trust-service evidence.
         </li>
       </ul>
       <section id="framework-interaction">
         <h3>Framework Interaction</h3>
         <p>
-          GQTS Core is the publication and verifier-retrieval substrate used by GIDAS component
-          artifacts. GDIS defines identity-binding evidence objects
-          <a href="#ref-gdis-core">[GDIS-CORE]</a>, and GQSCD defines device/controller assurance
-          evidence objects <a href="#ref-gqscd-core">[GQSCD-CORE]</a>. GQTS defines host, event-log,
-          and deterministic verification behavior for those artifacts without redefining their
-          component-specific semantics. Wallet-private proof artifacts remain outside GQTS storage
-          scope; GQTS publishes public verification material and optional blinded verification
+          GQTS Core is the publication and verifier-retrieval substrate used by
+          GIDAS component artifacts. GDIS defines identity-binding evidence
+          objects
+          <a href="#ref-gdis-core">[GDIS-CORE]</a>, and GQSCD defines
+          device/controller assurance evidence objects
+          <a href="#ref-gqscd-core">[GQSCD-CORE]</a>. GQTS defines host,
+          event-log, and deterministic verification behavior for those artifacts
+          without redefining their component-specific semantics. Wallet-private
+          proof artifacts remain outside GQTS storage scope; GQTS publishes
+          public verification material and optional blinded verification
           references only.
         </p>
 
         <p class="informative">
-          The following figures are informative presentation aids and do not define additional
-          conformance requirements.
+          The following figures are informative presentation aids and do not
+          define additional conformance requirements.
         </p>
         <div class="gqts-visual-grid informative">
           <figure class="gqts-visual-card">
@@ -265,38 +341,181 @@
               role="img"
               aria-labelledby="framework-interaction-figure-title framework-interaction-figure-desc"
             >
-              <title id="framework-interaction-figure-title">Framework interaction model</title>
+              <title id="framework-interaction-figure-title">
+                Framework interaction model
+              </title>
               <desc id="framework-interaction-figure-desc">
-                GDIS and GQSCD evidence flow into GQTS publication and retrieval. Verifiers run
-                deterministic checks and separate policy outputs.
+                GDIS and GQSCD evidence flow into GQTS publication and
+                retrieval. Verifiers run deterministic checks and separate
+                policy outputs.
               </desc>
-              <rect x="24" y="30" width="180" height="58" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
-              <text x="114" y="56" text-anchor="middle" font-size="14" fill="#173a69">GDIS Evidence</text>
-              <text x="114" y="74" text-anchor="middle" font-size="12" fill="#173a69">Identity Binding</text>
-              <rect x="24" y="152" width="180" height="58" rx="8" fill="#fff0e6" stroke="#b95f24" />
-              <text x="114" y="178" text-anchor="middle" font-size="14" fill="#7a3e14">GQSCD Evidence</text>
-              <text x="114" y="196" text-anchor="middle" font-size="12" fill="#7a3e14">Device Assurance</text>
-              <rect x="286" y="90" width="196" height="66" rx="8" fill="#ebf9ef" stroke="#287a4b" />
-              <text x="384" y="118" text-anchor="middle" font-size="14" fill="#1f5f3b">GQTS Core</text>
-              <text x="384" y="136" text-anchor="middle" font-size="12" fill="#1f5f3b">Publish + Replicate + Retrieve</text>
-              <rect x="556" y="42" width="176" height="58" rx="8" fill="#f4f5f8" stroke="#545f73" />
-              <text x="644" y="67" text-anchor="middle" font-size="14" fill="#2e3441">Verifier</text>
-              <text x="644" y="85" text-anchor="middle" font-size="12" fill="#2e3441">Mechanical Validity</text>
-              <rect x="556" y="152" width="176" height="58" rx="8" fill="#f9f2fb" stroke="#7a3e8f" />
-              <text x="644" y="177" text-anchor="middle" font-size="14" fill="#5a2d6a">Policy Layer</text>
-              <text x="644" y="195" text-anchor="middle" font-size="12" fill="#5a2d6a">Recognition Status</text>
-              <path d="M204 59 L286 112" stroke="#4d647d" stroke-width="2.1" fill="none" />
-              <path d="M204 181 L286 134" stroke="#4d647d" stroke-width="2.1" fill="none" />
-              <path d="M482 123 L556 71" stroke="#4d647d" stroke-width="2.1" fill="none" />
-              <path d="M482 123 L556 181" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <rect
+                x="24"
+                y="30"
+                width="180"
+                height="58"
+                rx="8"
+                fill="#e7f1ff"
+                stroke="#3f6fb1"
+              />
+              <text
+                x="114"
+                y="56"
+                text-anchor="middle"
+                font-size="14"
+                fill="#173a69"
+              >
+                GDIS Evidence
+              </text>
+              <text
+                x="114"
+                y="74"
+                text-anchor="middle"
+                font-size="12"
+                fill="#173a69"
+              >
+                Identity Binding
+              </text>
+              <rect
+                x="24"
+                y="152"
+                width="180"
+                height="58"
+                rx="8"
+                fill="#fff0e6"
+                stroke="#b95f24"
+              />
+              <text
+                x="114"
+                y="178"
+                text-anchor="middle"
+                font-size="14"
+                fill="#7a3e14"
+              >
+                GQSCD Evidence
+              </text>
+              <text
+                x="114"
+                y="196"
+                text-anchor="middle"
+                font-size="12"
+                fill="#7a3e14"
+              >
+                Device Assurance
+              </text>
+              <rect
+                x="286"
+                y="90"
+                width="196"
+                height="66"
+                rx="8"
+                fill="#ebf9ef"
+                stroke="#287a4b"
+              />
+              <text
+                x="384"
+                y="118"
+                text-anchor="middle"
+                font-size="14"
+                fill="#1f5f3b"
+              >
+                GQTS Core
+              </text>
+              <text
+                x="384"
+                y="136"
+                text-anchor="middle"
+                font-size="12"
+                fill="#1f5f3b"
+              >
+                Publish + Replicate + Retrieve
+              </text>
+              <rect
+                x="556"
+                y="42"
+                width="176"
+                height="58"
+                rx="8"
+                fill="#f4f5f8"
+                stroke="#545f73"
+              />
+              <text
+                x="644"
+                y="67"
+                text-anchor="middle"
+                font-size="14"
+                fill="#2e3441"
+              >
+                Verifier
+              </text>
+              <text
+                x="644"
+                y="85"
+                text-anchor="middle"
+                font-size="12"
+                fill="#2e3441"
+              >
+                Mechanical Validity
+              </text>
+              <rect
+                x="556"
+                y="152"
+                width="176"
+                height="58"
+                rx="8"
+                fill="#f9f2fb"
+                stroke="#7a3e8f"
+              />
+              <text
+                x="644"
+                y="177"
+                text-anchor="middle"
+                font-size="14"
+                fill="#5a2d6a"
+              >
+                Policy Layer
+              </text>
+              <text
+                x="644"
+                y="195"
+                text-anchor="middle"
+                font-size="12"
+                fill="#5a2d6a"
+              >
+                Recognition Status
+              </text>
+              <path
+                d="M204 59 L286 112"
+                stroke="#4d647d"
+                stroke-width="2.1"
+                fill="none"
+              />
+              <path
+                d="M204 181 L286 134"
+                stroke="#4d647d"
+                stroke-width="2.1"
+                fill="none"
+              />
+              <path
+                d="M482 123 L556 71"
+                stroke="#4d647d"
+                stroke-width="2.1"
+                fill="none"
+              />
+              <path
+                d="M482 123 L556 181"
+                stroke="#4d647d"
+                stroke-width="2.1"
+                fill="none"
+              />
               <polygon points="282,109 292,112 285,119" fill="#4d647d" />
               <polygon points="282,136 292,134 285,127" fill="#4d647d" />
               <polygon points="552,74 561,68 559,79" fill="#4d647d" />
               <polygon points="552,179 561,184 559,173" fill="#4d647d" />
             </svg>
             <figcaption class="gqts-caption">
-              GQTS defines the shared publication substrate; component evidence semantics remain in
-              GDIS and GQSCD.
+              GQTS defines the shared publication substrate; component evidence
+              semantics remain in GDIS and GQSCD.
             </figcaption>
           </figure>
 
@@ -308,31 +527,168 @@
               role="img"
               aria-labelledby="publish-loop-title publish-loop-desc"
             >
-              <title id="publish-loop-title">Publication and verification loop</title>
+              <title id="publish-loop-title">
+                Publication and verification loop
+              </title>
               <desc id="publish-loop-desc">
-                Event submission is validated, appended, retrieved with head checks, and verified
-                deterministically before policy output.
+                Event submission is validated, appended, retrieved with head
+                checks, and verified deterministically before policy output.
               </desc>
-              <rect x="34" y="92" width="136" height="60" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
-              <text x="102" y="117" text-anchor="middle" font-size="13" fill="#173a69">Submit Event</text>
-              <text x="102" y="135" text-anchor="middle" font-size="12" fill="#173a69">POST ingest</text>
-              <rect x="206" y="92" width="146" height="60" rx="8" fill="#ebf9ef" stroke="#287a4b" />
-              <text x="279" y="117" text-anchor="middle" font-size="13" fill="#1f5f3b">Validate</text>
-              <text x="279" y="135" text-anchor="middle" font-size="12" fill="#1f5f3b">Schema + Proof</text>
-              <rect x="388" y="92" width="146" height="60" rx="8" fill="#fff6e8" stroke="#9d6a22" />
-              <text x="461" y="117" text-anchor="middle" font-size="13" fill="#7a5319">Append Log</text>
-              <text x="461" y="135" text-anchor="middle" font-size="12" fill="#7a5319">Head updated</text>
-              <rect x="570" y="42" width="154" height="60" rx="8" fill="#f4f5f8" stroke="#545f73" />
-              <text x="647" y="67" text-anchor="middle" font-size="13" fill="#2e3441">Head Compare</text>
-              <text x="647" y="85" text-anchor="middle" font-size="12" fill="#2e3441">cheap divergence check</text>
-              <rect x="570" y="152" width="154" height="60" rx="8" fill="#f9f2fb" stroke="#7a3e8f" />
-              <text x="647" y="177" text-anchor="middle" font-size="13" fill="#5a2d6a">Deterministic Verify</text>
-              <text x="647" y="195" text-anchor="middle" font-size="12" fill="#5a2d6a">Mechanical + Policy</text>
+              <rect
+                x="34"
+                y="92"
+                width="136"
+                height="60"
+                rx="8"
+                fill="#e7f1ff"
+                stroke="#3f6fb1"
+              />
+              <text
+                x="102"
+                y="117"
+                text-anchor="middle"
+                font-size="13"
+                fill="#173a69"
+              >
+                Submit Event
+              </text>
+              <text
+                x="102"
+                y="135"
+                text-anchor="middle"
+                font-size="12"
+                fill="#173a69"
+              >
+                POST ingest
+              </text>
+              <rect
+                x="206"
+                y="92"
+                width="146"
+                height="60"
+                rx="8"
+                fill="#ebf9ef"
+                stroke="#287a4b"
+              />
+              <text
+                x="279"
+                y="117"
+                text-anchor="middle"
+                font-size="13"
+                fill="#1f5f3b"
+              >
+                Validate
+              </text>
+              <text
+                x="279"
+                y="135"
+                text-anchor="middle"
+                font-size="12"
+                fill="#1f5f3b"
+              >
+                Schema + Proof
+              </text>
+              <rect
+                x="388"
+                y="92"
+                width="146"
+                height="60"
+                rx="8"
+                fill="#fff6e8"
+                stroke="#9d6a22"
+              />
+              <text
+                x="461"
+                y="117"
+                text-anchor="middle"
+                font-size="13"
+                fill="#7a5319"
+              >
+                Append Log
+              </text>
+              <text
+                x="461"
+                y="135"
+                text-anchor="middle"
+                font-size="12"
+                fill="#7a5319"
+              >
+                Head updated
+              </text>
+              <rect
+                x="570"
+                y="42"
+                width="154"
+                height="60"
+                rx="8"
+                fill="#f4f5f8"
+                stroke="#545f73"
+              />
+              <text
+                x="647"
+                y="67"
+                text-anchor="middle"
+                font-size="13"
+                fill="#2e3441"
+              >
+                Head Compare
+              </text>
+              <text
+                x="647"
+                y="85"
+                text-anchor="middle"
+                font-size="12"
+                fill="#2e3441"
+              >
+                cheap divergence check
+              </text>
+              <rect
+                x="570"
+                y="152"
+                width="154"
+                height="60"
+                rx="8"
+                fill="#f9f2fb"
+                stroke="#7a3e8f"
+              />
+              <text
+                x="647"
+                y="177"
+                text-anchor="middle"
+                font-size="13"
+                fill="#5a2d6a"
+              >
+                Deterministic Verify
+              </text>
+              <text
+                x="647"
+                y="195"
+                text-anchor="middle"
+                font-size="12"
+                fill="#5a2d6a"
+              >
+                Mechanical + Policy
+              </text>
               <path d="M170 122 L206 122" stroke="#4d647d" stroke-width="2.1" />
               <path d="M352 122 L388 122" stroke="#4d647d" stroke-width="2.1" />
-              <path d="M534 122 L570 72" stroke="#4d647d" stroke-width="2.1" fill="none" />
-              <path d="M534 122 L570 182" stroke="#4d647d" stroke-width="2.1" fill="none" />
-              <path d="M647 102 L647 152" stroke="#4d647d" stroke-width="1.8" stroke-dasharray="5 4" />
+              <path
+                d="M534 122 L570 72"
+                stroke="#4d647d"
+                stroke-width="2.1"
+                fill="none"
+              />
+              <path
+                d="M534 122 L570 182"
+                stroke="#4d647d"
+                stroke-width="2.1"
+                fill="none"
+              />
+              <path
+                d="M647 102 L647 152"
+                stroke="#4d647d"
+                stroke-width="1.8"
+                stroke-dasharray="5 4"
+              />
               <polygon points="202,117 212,122 202,127" fill="#4d647d" />
               <polygon points="384,117 394,122 384,127" fill="#4d647d" />
               <polygon points="566,75 574,68 572,79" fill="#4d647d" />
@@ -340,8 +696,9 @@
               <polygon points="642,148 647,158 652,148" fill="#4d647d" />
             </svg>
             <figcaption class="gqts-caption">
-              Invalid input is rejected before append; accepted history is verified through
-              deterministic checks and separated policy processing.
+              Invalid input is rejected before append; accepted history is
+              verified through deterministic checks and separated policy
+              processing.
             </figcaption>
           </figure>
         </div>
@@ -350,22 +707,33 @@
 
     <section id="scope">
       <h2>Scope</h2>
-      <p>This specification defines:</p>
+      <p>This specification covers:</p>
       <ul>
         <li>a `/.well-known/` discovery profile for GQTS resources;</li>
-        <li>append-only directed linear signed-token history invariants and merge rules;</li>
-        <li>open-participation replication with opportunistic synchronization;</li>
         <li>
-          a mechanical verifier algorithm that separates cryptographic validity from recognition
-          or legal status decisions.
+          append-only directed linear signed-token history invariants and merge
+          rules;
+        </li>
+        <li>
+          open-participation replication with opportunistic synchronization;
+        </li>
+        <li>
+          a mechanical verifier algorithm that separates cryptographic validity
+          from recognition or legal status decisions.
         </li>
       </ul>
       <p>This specification does not:</p>
       <ul>
         <li>create legal qualification by itself;</li>
-        <li>store or restate wallet-private claims, credentials, or private proof witnesses;</li>
+        <li>
+          store or restate wallet-private claims, credentials, or private proof
+          witnesses;
+        </li>
         <li>replace jurisdictional trusted lists or statutory registries;</li>
-        <li>mandate one storage engine, one host operator, or one governance authority.</li>
+        <li>
+          mandate one storage engine, one host operator, or one governance
+          authority.
+        </li>
       </ul>
     </section>
 
@@ -374,70 +742,74 @@
       <dl>
         <dt><dfn>GQTS host</dfn></dt>
         <dd>
-          An HTTP origin that serves GQTS resources and MAY ingest, replicate, and gossip
-          append-only signed-token history material.
+          An HTTP origin that serves GQTS resources and MAY ingest, replicate,
+          and gossip append-only signed-token history material.
         </dd>
 
         <dt><dfn>service descriptor</dfn></dt>
         <dd>
-          A machine-readable object describing one trust-service instance, its type, and its
-          current token-chain head state.
+          A machine-readable object describing one trust-service instance, its
+          type, and its current token-chain head state.
         </dd>
 
         <dt><dfn>scheme descriptor</dfn></dt>
         <dd>
-          A machine-readable governance-scoped object describing naming rules, proof profile,
-          canonicalization profile, and publication floor requirements.
+          A machine-readable governance-scoped object describing naming rules,
+          proof profile, canonicalization profile, and publication floor
+          requirements.
         </dd>
 
         <dt><dfn>verification material</dfn></dt>
         <dd>
-          Publicly retrievable trust data used by verifiers, including verification methods,
-          controller references, status metadata, and signed event history. Wallet-private claims
-          are out of scope.
+          Publicly retrievable trust data used by verifiers, including
+          verification methods, controller references, status metadata, and
+          signed event history. Wallet-private claims are out of scope.
         </dd>
 
         <dt><dfn>event namespace</dfn></dt>
         <dd>
-          A scoped signed-token stream identified by a log identifier where entries form an
-          append-only directed linear history.
+          A scoped signed-token stream identified by a log identifier where
+          entries form an append-only directed linear history.
         </dd>
 
         <dt><dfn>head token</dfn></dt>
         <dd>
-          Identifier of the latest accepted token for an <a>event namespace</a>, used for
-          cheap synchronization checks before heavy retrieval.
+          Identifier of the latest accepted token for an <a>event namespace</a>,
+          used for cheap synchronization checks before heavy retrieval.
         </dd>
 
         <dt><dfn>merge token</dfn></dt>
         <dd>
-          A signed token that reconciles competing candidate heads while preserving one canonical
-          previous-token pointer in the accepted chain.
+          A signed token that reconciles competing candidate heads while
+          preserving one canonical previous-token pointer in the accepted chain.
         </dd>
 
         <dt><dfn>bad node</dfn></dt>
         <dd>
-          A candidate event entry that fails deterministic acceptance checks (for example schema,
-          previous-token linkage, key-lineage constraints, or proof verification) and is therefore
-          rejected from accepted history.
+          A candidate event entry that fails deterministic acceptance checks
+          (for example schema, previous-token linkage, key-lineage constraints,
+          or proof verification) and is therefore rejected from accepted
+          history.
         </dd>
 
         <dt><dfn>mechanical validity</dfn></dt>
         <dd>
-          A verifier result stating that schema constraints, signatures/proofs, canonicalization,
-          and signed-token chain requirements were satisfied.
+          A verifier result stating that schema constraints, signatures/proofs,
+          canonicalization, and signed-token chain requirements were satisfied.
         </dd>
 
         <dt><dfn>recognition status</dfn></dt>
         <dd>
-          A policy output derived from external governance sources (for example trusted lists,
-          legal registries, contractual trust anchors), separate from <a>mechanical validity</a>.
+          A policy output derived from external governance sources (for example
+          trusted lists, legal registries, contractual trust anchors), separate
+          from <a>mechanical validity</a>.
         </dd>
 
         <dt><dfn>governance code</dfn></dt>
         <dd>
-          A normalized identifier for governance-scoped objects. In this profile, values MUST be
-          lowercase ASCII and match the pattern defined by the OpenAPI schema
+          A normalized identifier for governance-scoped objects. In this
+          profile, values MUST be lowercase ASCII and match the pattern defined
+          by the OpenAPI schema
           <a href="#schema-GovernanceCode">`GovernanceCode`</a>.
         </dd>
       </dl>
@@ -447,26 +819,29 @@
       <h2>Data Model Semantics Baseline</h2>
       <p>
         JSON payload semantics in this specification follow RFC 8259
-        <a href="#ref-rfc8259">[RFC8259]</a>. Data-model terms such as list, set, tuple, and byte
-        sequence follow WHATWG Infra terminology unless a profile states an explicit override
-        <a href="#ref-infra">[INFRA]</a>.
+        <a href="#ref-rfc8259">[RFC8259]</a>. Data-model terms such as list,
+        set, tuple, and byte sequence follow WHATWG Infra terminology unless a
+        profile states an explicit override <a href="#ref-infra">[INFRA]</a>.
       </p>
     </section>
 
     <section id="openapi-surface">
-      <h2>Normative Interface Surface</h2>
+      <h2>Protocols and APIs</h2>
       <p>
-        <span class="status-tag">Normative Endpoint Contract</span>
+        <span class="status-tag">Indicative Endpoint Contract (Draft)</span>
       </p>
       <p>
-        Endpoint semantics are normative in <a href="./openapi.yaml">`./openapi.yaml`</a>
-        (OpenAPI 3.1.2). Rendered documentation is available at
+        Endpoint contracts are published in
+        <a href="./openapi.yaml">`./openapi.yaml`</a>
+        (OpenAPI 3.1.2). In this draft they are indicative ("suuntaa antavia")
+        and may change before final schema lock after the first reference
+        implementation. Rendered documentation is available at
         <a href="./openapi/">`./openapi/`</a>.
       </p>
       <p>
-        This ReSpec document MUST NOT restate endpoint wire contracts. It defines invariant
-        constraints, threat-model boundaries, and verifier processing semantics that apply to
-        OpenAPI-delivered objects.
+        This ReSpec document MUST NOT restate endpoint wire contracts. It
+        defines invariant constraints, threat-model boundaries, and verifier
+        processing semantics that apply to OpenAPI-delivered objects.
       </p>
 
       <section id="openapi-operation-anchors">
@@ -481,7 +856,9 @@
           <tbody>
             <tr>
               <td>
-                <a id="op-getSchemeDescriptor" href="./openapi/#operation/getSchemeDescriptor"
+                <a
+                  id="op-getSchemeDescriptor"
+                  href="./openapi/#operation/getSchemeDescriptor"
                   ><code>getSchemeDescriptor</code></a
                 >
               </td>
@@ -489,23 +866,34 @@
             </tr>
             <tr>
               <td>
-                <a id="op-getEndpointKindCatalog" href="./openapi/#operation/getEndpointKindCatalog"
+                <a
+                  id="op-getEndpointKindCatalog"
+                  href="./openapi/#operation/getEndpointKindCatalog"
                   ><code>getEndpointKindCatalog</code></a
                 >
               </td>
-              <td>Fetch normative endpoint-kind taxonomy for a governance profile.</td>
+              <td>
+                Fetch declared endpoint-kind taxonomy for a governance profile.
+              </td>
             </tr>
             <tr>
               <td>
-                <a id="op-getTypeDescriptor" href="./openapi/#operation/getTypeDescriptor"
+                <a
+                  id="op-getTypeDescriptor"
+                  href="./openapi/#operation/getTypeDescriptor"
                   ><code>getTypeDescriptor</code></a
                 >
               </td>
-              <td>Fetch one trust-service descriptor with current head-token state.</td>
+              <td>
+                Fetch one trust-service descriptor with current head-token
+                state.
+              </td>
             </tr>
             <tr>
               <td>
-                <a id="op-getEventLogView" href="./openapi/#operation/getEventLogView"
+                <a
+                  id="op-getEventLogView"
+                  href="./openapi/#operation/getEventLogView"
                   ><code>getEventLogView</code></a
                 >
               </td>
@@ -513,19 +901,29 @@
             </tr>
             <tr>
               <td>
-                <a id="op-postEventIngest" href="./openapi/#operation/postEventIngest"
+                <a
+                  id="op-postEventIngest"
+                  href="./openapi/#operation/postEventIngest"
                   ><code>postEventIngest</code></a
                 >
               </td>
-              <td>Submit an ingest event; acceptance and state-transition semantics are normative in OpenAPI.</td>
+              <td>
+                Submit an ingest event; acceptance and state-transition
+                semantics are defined in the draft OpenAPI contract.
+              </td>
             </tr>
             <tr>
               <td>
-                <a id="op-getEventHeadMeta" href="./openapi/#operation/getEventHeadMeta"
+                <a
+                  id="op-getEventHeadMeta"
+                  href="./openapi/#operation/getEventHeadMeta"
                   ><code>getEventHeadMeta</code></a
                 >
               </td>
-              <td>Fetch compact event-head metadata for low-cost divergence checks.</td>
+              <td>
+                Fetch compact event-head metadata for low-cost divergence
+                checks.
+              </td>
             </tr>
             <tr>
               <td>
@@ -626,9 +1024,10 @@
         <h3>Media Type Governance</h3>
         <p>
           Media types in this profile follow RFC 6838
-          <a href="#ref-rfc6838">[RFC6838]</a> and use the structured syntax suffix
-          <code>+json</code> where semantics are JSON. Profile revisions MUST preserve backward
-          compatibility expectations or publish a versioned media-type change policy.
+          <a href="#ref-rfc6838">[RFC6838]</a> and use the structured syntax
+          suffix <code>+json</code> where semantics are JSON. Profile revisions
+          MUST preserve backward compatibility expectations or publish a
+          versioned media-type change policy.
         </p>
       </section>
 
@@ -647,37 +1046,51 @@
             <tr>
               <td><code>scheme</code></td>
               <td>
-                <a href="#op-getSchemeDescriptor"><code>getSchemeDescriptor</code></a>,
-                <a href="#op-getEndpointKindCatalog"><code>getEndpointKindCatalog</code></a>
+                <a href="#op-getSchemeDescriptor"
+                  ><code>getSchemeDescriptor</code></a
+                >,
+                <a href="#op-getEndpointKindCatalog"
+                  ><code>getEndpointKindCatalog</code></a
+                >
               </td>
               <td>
-                <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>,
-                <a href="#schema-EndpointKindCatalog"><code>EndpointKindCatalog</code></a>
+                <a href="#schema-SchemeDescriptor"
+                  ><code>SchemeDescriptor</code></a
+                >,
+                <a href="#schema-EndpointKindCatalog"
+                  ><code>EndpointKindCatalog</code></a
+                >
               </td>
               <td>Mutable with explicit versioning and validators.</td>
             </tr>
             <tr>
               <td><code>type</code></td>
               <td>
-                <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a>
+                <a href="#op-getTypeDescriptor"
+                  ><code>getTypeDescriptor</code></a
+                >
               </td>
               <td>
-                <a href="#schema-ServiceDescriptor"><code>ServiceDescriptor</code></a>
+                <a href="#schema-ServiceDescriptor"
+                  ><code>ServiceDescriptor</code></a
+                >
               </td>
               <td>Mutable with explicit head-token references.</td>
             </tr>
             <tr>
               <td><code>event</code></td>
               <td>
-                <a href="#op-getEventHeadMeta"><code>getEventHeadMeta</code></a>,
-                <a href="#op-getEventLogView"><code>getEventLogView</code></a>,
-                <a href="#op-postEventIngest"><code>postEventIngest</code></a>,
+                <a href="#op-getEventHeadMeta"><code>getEventHeadMeta</code></a
+                >, <a href="#op-getEventLogView"><code>getEventLogView</code></a
+                >, <a href="#op-postEventIngest"><code>postEventIngest</code></a
+                >,
                 <a href="#op-getEventById"><code>getEventById</code></a>
               </td>
               <td>
-                <a href="#schema-EventHeadMeta"><code>EventHeadMeta</code></a>,
-                <a href="#schema-EventLogView"><code>EventLogView</code></a>,
-                <a href="#schema-EventEnvelope"><code>EventEnvelope</code></a>,
+                <a href="#schema-EventHeadMeta"><code>EventHeadMeta</code></a
+                >, <a href="#schema-EventLogView"><code>EventLogView</code></a
+                >, <a href="#schema-EventEnvelope"><code>EventEnvelope</code></a
+                >,
                 <a href="#schema-AsyncReceipt"><code>AsyncReceipt</code></a>
               </td>
               <td>Append-only history with explicit merge tokens.</td>
@@ -688,58 +1101,68 @@
     </section>
 
     <section id="requirement-traceability">
-      <h2>Requirement Traceability</h2>
+      <h2>Normative Requirements</h2>
       <p>
-        Each normative requirement in this document is mapped to OpenAPI operation and schema
-        anchors. Protocol invariants are defined here; wire contracts remain authoritative in
-        OpenAPI. Each mapped operation carries the matching `x-gqts-requirement` extension in
-        `openapi.yaml`.
+        Each normative requirement in this document is mapped to OpenAPI
+        operation and schema anchors. Protocol invariants are defined here;
+        draft wire contracts are tracked in OpenAPI. Each mapped operation
+        carries the matching `x-gqts-requirement` extension in `openapi.yaml`.
       </p>
       <ol>
         <li id="req-gqts-01">
-          <strong>REQ-GQTS-01 Discovery Scope</strong>:
-          Implementations MUST support governance-scoped discovery via
+          <strong>REQ-GQTS-01 Discovery Scope</strong>: Implementations MUST
+          support governance-scoped discovery via
           <a href="#op-getSchemeDescriptor"><code>getSchemeDescriptor</code></a>
           and schema constraints in
-          <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>.
+          <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a
+          >.
         </li>
         <li id="req-gqts-02">
           <strong>REQ-GQTS-02 Endpoint-Kind Publication</strong>:
           Implementations MUST publish endpoint-kind mapping material via
-          <a href="#op-getEndpointKindCatalog"><code>getEndpointKindCatalog</code></a>
+          <a href="#op-getEndpointKindCatalog"
+            ><code>getEndpointKindCatalog</code></a
+          >
           conforming to
-          <a href="#schema-EndpointKindCatalog"><code>EndpointKindCatalog</code></a>.
+          <a href="#schema-EndpointKindCatalog"
+            ><code>EndpointKindCatalog</code></a
+          >.
         </li>
         <li id="req-gqts-03">
           <strong>REQ-GQTS-03 Service Descriptor Integrity</strong>:
           Implementations MUST expose current service head-token state through
-          <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a> using
-          <a href="#schema-ServiceDescriptor"><code>ServiceDescriptor</code></a>.
+          <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a>
+          using
+          <a href="#schema-ServiceDescriptor"><code>ServiceDescriptor</code></a
+          >.
         </li>
         <li id="req-gqts-04">
-          <strong>REQ-GQTS-04 Low-Cost Divergence Detection</strong>:
-          Verifiers and peers SHOULD compare compact head-token metadata via
-          <a href="#op-getEventHeadMeta"><code>getEventHeadMeta</code></a> before heavy sync work.
+          <strong>REQ-GQTS-04 Low-Cost Divergence Detection</strong>: Verifiers
+          and peers SHOULD compare compact head-token metadata via
+          <a href="#op-getEventHeadMeta"><code>getEventHeadMeta</code></a>
+          before heavy sync work.
         </li>
         <li id="req-gqts-05">
-          <strong>REQ-GQTS-05 Append-Only Retrieval</strong>:
-          Event history retrieval MUST use
+          <strong>REQ-GQTS-05 Append-Only Retrieval</strong>: Event history
+          retrieval MUST use
           <a href="#op-getEventLogView"><code>getEventLogView</code></a> and
-          <a href="#schema-EventLogView"><code>EventLogView</code></a>, preserving append-only
-          interpretation rules.
+          <a href="#schema-EventLogView"><code>EventLogView</code></a
+          >, preserving append-only interpretation rules.
         </li>
         <li id="req-gqts-06">
-          <strong>REQ-GQTS-06 Asynchronous Ingest</strong>:
-          Event ingest/gossip MUST be modeled as asynchronous acceptance through
-          <a href="#op-postEventIngest"><code>postEventIngest</code></a> and corresponding
-          ingestion-receipt objects represented by
-          <a href="#schema-AsyncReceipt"><code>AsyncReceipt</code></a>.
+          <strong>REQ-GQTS-06 Asynchronous Ingest</strong>: Event ingest/gossip
+          MUST be modeled as asynchronous acceptance through
+          <a href="#op-postEventIngest"><code>postEventIngest</code></a> and
+          corresponding ingestion-receipt objects represented by
+          <a href="#schema-AsyncReceipt"><code>AsyncReceipt</code></a
+          >.
         </li>
         <li id="req-gqts-07">
-          <strong>REQ-GQTS-07 Immutable Event Addressing</strong>:
-          Event-object retrieval MUST use
+          <strong>REQ-GQTS-07 Immutable Event Addressing</strong>: Event-object
+          retrieval MUST use
           <a href="#op-getEventById"><code>getEventById</code></a> and validate
-          <a href="#schema-EventEnvelope"><code>EventEnvelope</code></a>.
+          <a href="#schema-EventEnvelope"><code>EventEnvelope</code></a
+          >.
         </li>
       </ol>
     </section>
@@ -752,22 +1175,25 @@
       <section id="mandate-law-standards">
         <h3>Mandate (law/standards)</h3>
         <p>
-          Statements about legal effect are constrained to this section. GQTS Core does not
-          define legal recognition; it defines technical evidence and verification behavior.
+          Statements about legal effect are constrained to this section. GQTS
+          Core does not define legal recognition; it defines technical evidence
+          and verification behavior.
         </p>
         <p>
-          Compatibility profiling and assessment workflows MAY map conformance evidence to ETSI
-          trust-service policy and assessment baselines where applicable
-          <a href="#ref-etsi-319401">[ETSI-319401]</a>. Such mapping does not change cryptographic
-          verification outcomes defined by this specification.
+          Compatibility profiling and assessment workflows MAY map conformance
+          evidence to ETSI trust-service policy and assessment baselines where
+          applicable
+          <a href="#ref-etsi-319401">[ETSI-319401]</a>. Such mapping does not
+          change cryptographic verification outcomes defined by this
+          specification.
         </p>
       </section>
 
       <section id="mandate-rfc8615">
         <h3>Well-Known URI Governance</h3>
         <p>
-          GQTS discovery uses `/.well-known/` semantics and therefore depends on RFC 8615 rules
-          and the IANA Well-Known URI registry process
+          GQTS discovery uses `/.well-known/` semantics and therefore depends on
+          RFC 8615 rules and the IANA Well-Known URI registry process
           <a href="#ref-rfc8615">[RFC8615]</a>
           <a href="#ref-iana-wku">[IANA-WKU]</a>.
         </p>
@@ -776,9 +1202,10 @@
       <section id="mandate-eidas-terminology">
         <h3>Qualification Terminology Discipline</h3>
         <p>
-          Terms such as "qualified", "notified", "listed", or "recognized" MUST be backed by
-          independently verifiable legal or regulatory sources in the target jurisdiction, such as
-          EU eIDAS legal texts and trusted-list frameworks where applicable
+          Terms such as "qualified", "notified", "listed", or "recognized" MUST
+          be backed by independently verifiable legal or regulatory sources in
+          the target jurisdiction, such as EU eIDAS legal texts and trusted-list
+          frameworks where applicable
           <a href="#ref-eidas-910">[EU-910/2014]</a>
           <a href="#ref-eidas-consolidated">[EU-910-CONS]</a>
           <a href="#ref-eu-2024-1183">[EU-2024/1183]</a>
@@ -789,25 +1216,33 @@
       <section id="mandate-openapi">
         <h3>OpenAPI Contract Authority</h3>
         <p>
-          Endpoint behavior is authoritative in OpenAPI 3.1.2
-          <a href="#ref-openapi31">[OPENAPI-3.1.2]</a>. ReSpec prose in this document is
-          interpretive for invariants and verifier processing only.
+          Endpoint behavior is published in OpenAPI 3.1.2
+          <a href="#ref-openapi31">[OPENAPI-3.1.2]</a>. In this draft, those
+          schemas are indicative ("suuntaa antavia") and become normative only
+          after the first reference implementation freezes the contract set.
+          ReSpec prose in this document is interpretive for invariants and
+          verifier processing only.
         </p>
       </section>
     </section>
 
     <section id="gqts-model">
-      <h2>GQTS Core Model Constraints</h2>
+      <h2>Architecture</h2>
       <section id="well-known-path">
         <h3>Well-Known Discovery Path</h3>
         <p>
           The default discovery namespace is:
-          <span class="mono">/.well-known/gidas/gqts/&lt;kind&gt;/&lt;id&gt;</span>.
+          <span class="mono"
+            >/.well-known/gidas/gqts/&lt;kind&gt;/&lt;id&gt;</span
+          >.
         </p>
         <p>
-          `<kind>` is an enumerated token set: `type`, `event`, `scheme`. `<id>` is either a
-          UUID-like service/log identifier or a <a>governance code</a> value validated by
-          <a href="#schema-GovernanceCode">`GovernanceCode`</a>.
+          <code>&lt;kind&gt;</code> is an enumerated token set:
+          <code>type</code>, <code>event</code>, <code>scheme</code>.
+          <code>&lt;id&gt;</code> is either a UUID-like service/log identifier
+          or a <a>governance code</a> value validated by
+          <a href="#schema-GovernanceCode"><code>GovernanceCode</code></a
+          >.
         </p>
       </section>
 
@@ -816,37 +1251,43 @@
         <ul>
           <li>History MUST be append-only; corrections are new events.</li>
           <li>
-            The first accepted event in an <a>event namespace</a> MUST be a genesis/root event
-            that establishes the initial verification method.
+            The first accepted event in an <a>event namespace</a> MUST be a
+            genesis/root event that establishes the initial verification method.
           </li>
           <li>
-            This version defines no history-compaction mechanism; accepted events and proof
-            material remain verification inputs while they are published by the controller.
+            This version defines no history-compaction mechanism; accepted
+            events and proof material remain verification inputs while they are
+            published by the controller.
           </li>
           <li>
-            Each non-genesis accepted event MUST link to the previously accepted head and MUST be
-            signature-valid under the currently active verification method lineage.
-          </li>
-          <li>Divergence MUST be detectable through differing <a>head token</a> values.</li>
-          <li>
-            Merge MUST be explicit: a merge is represented as a new <a>merge token</a> that
-            reconciles candidate heads.
+            Each non-genesis accepted event MUST link to the previously accepted
+            head and MUST be signature-valid under the currently active
+            verification method lineage.
           </li>
           <li>
-            Each accepted event MUST be independently retrievable and verifiable by event identifier
-            (no opaque chunk-only verification mode in this version).
+            Divergence MUST be detectable through differing
+            <a>head token</a> values.
           </li>
           <li>
-            Verification MUST be mechanical: canonicalization, token-link checks, and proof checks
-            are deterministic.
+            Merge MUST be explicit: a merge is represented as a new
+            <a>merge token</a> that reconciles candidate heads.
           </li>
           <li>
-            Entries that fail deterministic checks MUST be classified as a <a>bad node</a> and
-            MUST be rejected from accepted history.
+            Each accepted event MUST be independently retrievable and verifiable
+            by event identifier (no opaque chunk-only verification mode in this
+            version).
           </li>
           <li>
-            Hosts MUST NOT trigger heavy merge work unless a <a>head token</a> mismatch is
-            detected.
+            Verification MUST be mechanical: canonicalization, token-link
+            checks, and proof checks are deterministic.
+          </li>
+          <li>
+            Entries that fail deterministic checks MUST be classified as a
+            <a>bad node</a> and MUST be rejected from accepted history.
+          </li>
+          <li>
+            Hosts MUST NOT trigger heavy merge work unless a
+            <a>head token</a> mismatch is detected.
           </li>
         </ul>
       </section>
@@ -854,38 +1295,46 @@
       <section id="replication-open-participation">
         <h3>Open Participation Replication</h3>
         <p>
-          Replication is open participation: any origin MAY operate as a <a>GQTS host</a> and
-          gossip GQTS material.
-          Governance profiles MAY define minimum publication targets, but MUST NOT define a
-          maximum or exclusive host set by schema.
+          Replication is open participation: any origin MAY operate as a
+          <a>GQTS host</a> and gossip GQTS material. Governance profiles MAY
+          define minimum publication targets, but MUST NOT define a maximum or
+          exclusive host set by schema.
         </p>
         <p>
-          Admission control is protocol-validity based: hosts MUST validate incoming event objects
-          against applicable OpenAPI schema constraints and proof-verification requirements before
-          acceptance. Invalid entries MUST be rejected and MUST NOT be merged into accepted
-          history; when reporting endpoints exist, hosts SHOULD expose bad-node diagnostics.
+          Admission control is protocol-validity based: hosts MUST validate
+          incoming event objects against applicable OpenAPI schema constraints
+          and proof-verification requirements before acceptance. Invalid entries
+          MUST be rejected and MUST NOT be merged into accepted history; when
+          reporting endpoints exist, hosts SHOULD expose bad-node diagnostics.
         </p>
       </section>
 
       <section id="caching-rules">
         <h3>Caching and Conditional Retrieval</h3>
         <p>
-          Hosts SHOULD expose `ETag` values aligned with the current <a>head token</a>. Verifiers and peers
-          SHOULD use conditional retrieval (`If-None-Match`) before transferring event pages
-          <a href="#ref-rfc9110">[RFC9110]</a>. Immutable event retrieval and append-only log views
-          MUST declare cache behavior explicitly in the OpenAPI contract.
+          Hosts SHOULD expose `ETag` values aligned with the current
+          <a>head token</a>. Verifiers and peers SHOULD use conditional
+          retrieval (`If-None-Match`) before transferring event pages
+          <a href="#ref-rfc9110">[RFC9110]</a>. Immutable event retrieval and
+          append-only log views MUST declare cache behavior explicitly in the
+          OpenAPI contract.
         </p>
       </section>
 
       <section id="threat-model-honesty">
-        <h3>Threat Model Honesty</h3>
+        <h3>Threat Model</h3>
         <ul>
           <li>Client and network environments are hostile by default.</li>
-          <li>Wallet-private proof artifacts are outside the GQTS trust boundary.</li>
-          <li>Governance allowlists are policy signals, not cryptographic enforcement.</li>
           <li>
-            "Approved list" claims MUST NOT be treated as technical guarantees without
-            cryptographic verification of corresponding evidence.
+            Wallet-private proof artifacts are outside the GQTS trust boundary.
+          </li>
+          <li>
+            Governance allowlists are policy signals, not cryptographic
+            enforcement.
+          </li>
+          <li>
+            "Approved list" claims MUST NOT be treated as technical guarantees
+            without cryptographic verification of corresponding evidence.
           </li>
         </ul>
       </section>
@@ -895,9 +1344,11 @@
       <h2>Mechanical Verifier Algorithm</h2>
       <ol>
         <li>
-          Resolve <a>service descriptor</a> and <a>scheme descriptor</a> metadata using
+          Resolve <a>service descriptor</a> and
+          <a>scheme descriptor</a> metadata using
           <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a> and
-          <a href="#op-getSchemeDescriptor"><code>getSchemeDescriptor</code></a>.
+          <a href="#op-getSchemeDescriptor"><code>getSchemeDescriptor</code></a
+          >.
         </li>
         <li>
           Fetch a cheap head view using
@@ -905,27 +1356,34 @@
           with conditional headers.
         </li>
         <li>
-          If <a>head token</a> values from peer hosts are equal, skip heavy merge processing.
+          If <a>head token</a> values from peer hosts are equal, skip heavy
+          merge processing.
         </li>
         <li>
-          If <a>head token</a> values differ, fetch only missing chain segments and validate
-          canonicalization, previous-token linkage, root-to-head verification-method lineage, and
-          proof material for each candidate head.
+          If <a>head token</a> values differ, fetch only missing chain segments
+          and validate canonicalization, previous-token linkage, root-to-head
+          verification-method lineage, and proof material for each candidate
+          head.
         </li>
         <li>
-          Classify any candidate entry that fails deterministic checks as a <a>bad node</a>,
-          reject it from accepted history, and optionally report it.
+          Classify any candidate entry that fails deterministic checks as a
+          <a>bad node</a>, reject it from accepted history, and optionally
+          report it.
         </li>
         <li>
-          Accept merge only when represented as an explicit <a>merge token</a> that reconciles
-          candidate heads while preserving one canonical previous-token pointer.
+          Accept merge only when represented as an explicit
+          <a>merge token</a> that reconciles candidate heads while preserving
+          one canonical previous-token pointer.
         </li>
         <li>
           Produce separate outputs: (a) <a>mechanical validity</a>, (b)
           <a>recognition status</a> from external governance inputs.
         </li>
       </ol>
-      <figure class="gqts-visual-card informative" id="verifier-pipeline-visual">
+      <figure
+        class="gqts-visual-card informative"
+        id="verifier-pipeline-visual"
+      >
         <p><strong>Verifier Pipeline View (Informative)</strong></p>
         <svg
           class="gqts-visual-svg"
@@ -935,33 +1393,187 @@
         >
           <title id="verifier-pipeline-title">Verifier pipeline</title>
           <desc id="verifier-pipeline-desc">
-            The verifier resolves descriptors, checks head divergence, fetches missing chain
-            segments, verifies proofs and token-link constraints, and emits separate mechanical and
-            policy outputs.
+            The verifier resolves descriptors, checks head divergence, fetches
+            missing chain segments, verifies proofs and token-link constraints,
+            and emits separate mechanical and policy outputs.
           </desc>
-          <rect x="18" y="76" width="148" height="58" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
-          <text x="92" y="100" text-anchor="middle" font-size="13" fill="#173a69">Resolve</text>
-          <text x="92" y="118" text-anchor="middle" font-size="12" fill="#173a69">scheme + service</text>
-          <rect x="192" y="76" width="148" height="58" rx="8" fill="#ebf9ef" stroke="#287a4b" />
-          <text x="266" y="100" text-anchor="middle" font-size="13" fill="#1f5f3b">Compare Heads</text>
-          <text x="266" y="118" text-anchor="middle" font-size="12" fill="#1f5f3b">cheap branch check</text>
-          <rect x="366" y="76" width="162" height="58" rx="8" fill="#fff6e8" stroke="#9d6a22" />
-          <text x="447" y="100" text-anchor="middle" font-size="13" fill="#7a5319">Fetch Missing</text>
-          <text x="447" y="118" text-anchor="middle" font-size="12" fill="#7a5319">chain segments</text>
-          <rect x="554" y="76" width="146" height="58" rx="8" fill="#f4f5f8" stroke="#545f73" />
-          <text x="627" y="100" text-anchor="middle" font-size="13" fill="#2e3441">Verify</text>
-          <text x="627" y="118" text-anchor="middle" font-size="12" fill="#2e3441">schema + chain + proof</text>
-          <rect x="726" y="30" width="136" height="58" rx="8" fill="#e9f6ef" stroke="#2d7b50" />
-          <text x="794" y="54" text-anchor="middle" font-size="13" fill="#1f5f3b">Output A</text>
-          <text x="794" y="72" text-anchor="middle" font-size="12" fill="#1f5f3b">Mechanical Validity</text>
-          <rect x="726" y="122" width="136" height="58" rx="8" fill="#f9f2fb" stroke="#7a3e8f" />
-          <text x="794" y="146" text-anchor="middle" font-size="13" fill="#5a2d6a">Output B</text>
-          <text x="794" y="164" text-anchor="middle" font-size="12" fill="#5a2d6a">Recognition Status</text>
+          <rect
+            x="18"
+            y="76"
+            width="148"
+            height="58"
+            rx="8"
+            fill="#e7f1ff"
+            stroke="#3f6fb1"
+          />
+          <text
+            x="92"
+            y="100"
+            text-anchor="middle"
+            font-size="13"
+            fill="#173a69"
+          >
+            Resolve
+          </text>
+          <text
+            x="92"
+            y="118"
+            text-anchor="middle"
+            font-size="12"
+            fill="#173a69"
+          >
+            scheme + service
+          </text>
+          <rect
+            x="192"
+            y="76"
+            width="148"
+            height="58"
+            rx="8"
+            fill="#ebf9ef"
+            stroke="#287a4b"
+          />
+          <text
+            x="266"
+            y="100"
+            text-anchor="middle"
+            font-size="13"
+            fill="#1f5f3b"
+          >
+            Compare Heads
+          </text>
+          <text
+            x="266"
+            y="118"
+            text-anchor="middle"
+            font-size="12"
+            fill="#1f5f3b"
+          >
+            cheap branch check
+          </text>
+          <rect
+            x="366"
+            y="76"
+            width="162"
+            height="58"
+            rx="8"
+            fill="#fff6e8"
+            stroke="#9d6a22"
+          />
+          <text
+            x="447"
+            y="100"
+            text-anchor="middle"
+            font-size="13"
+            fill="#7a5319"
+          >
+            Fetch Missing
+          </text>
+          <text
+            x="447"
+            y="118"
+            text-anchor="middle"
+            font-size="12"
+            fill="#7a5319"
+          >
+            chain segments
+          </text>
+          <rect
+            x="554"
+            y="76"
+            width="146"
+            height="58"
+            rx="8"
+            fill="#f4f5f8"
+            stroke="#545f73"
+          />
+          <text
+            x="627"
+            y="100"
+            text-anchor="middle"
+            font-size="13"
+            fill="#2e3441"
+          >
+            Verify
+          </text>
+          <text
+            x="627"
+            y="118"
+            text-anchor="middle"
+            font-size="12"
+            fill="#2e3441"
+          >
+            schema + chain + proof
+          </text>
+          <rect
+            x="726"
+            y="30"
+            width="136"
+            height="58"
+            rx="8"
+            fill="#e9f6ef"
+            stroke="#2d7b50"
+          />
+          <text
+            x="794"
+            y="54"
+            text-anchor="middle"
+            font-size="13"
+            fill="#1f5f3b"
+          >
+            Output A
+          </text>
+          <text
+            x="794"
+            y="72"
+            text-anchor="middle"
+            font-size="12"
+            fill="#1f5f3b"
+          >
+            Mechanical Validity
+          </text>
+          <rect
+            x="726"
+            y="122"
+            width="136"
+            height="58"
+            rx="8"
+            fill="#f9f2fb"
+            stroke="#7a3e8f"
+          />
+          <text
+            x="794"
+            y="146"
+            text-anchor="middle"
+            font-size="13"
+            fill="#5a2d6a"
+          >
+            Output B
+          </text>
+          <text
+            x="794"
+            y="164"
+            text-anchor="middle"
+            font-size="12"
+            fill="#5a2d6a"
+          >
+            Recognition Status
+          </text>
           <path d="M166 105 L192 105" stroke="#4d647d" stroke-width="2.1" />
           <path d="M340 105 L366 105" stroke="#4d647d" stroke-width="2.1" />
           <path d="M528 105 L554 105" stroke="#4d647d" stroke-width="2.1" />
-          <path d="M700 105 L726 59" stroke="#4d647d" stroke-width="2.1" fill="none" />
-          <path d="M700 105 L726 151" stroke="#4d647d" stroke-width="2.1" fill="none" />
+          <path
+            d="M700 105 L726 59"
+            stroke="#4d647d"
+            stroke-width="2.1"
+            fill="none"
+          />
+          <path
+            d="M700 105 L726 151"
+            stroke="#4d647d"
+            stroke-width="2.1"
+            fill="none"
+          />
           <polygon points="188,100 198,105 188,110" fill="#4d647d" />
           <polygon points="362,100 372,105 362,110" fill="#4d647d" />
           <polygon points="550,100 560,105 550,110" fill="#4d647d" />
@@ -969,22 +1581,24 @@
           <polygon points="721,149 730,156 728,145" fill="#4d647d" />
         </svg>
         <figcaption class="gqts-caption">
-          This figure summarizes the algorithmic step order; normative processing behavior remains
-          defined by the textual algorithm above.
+          This figure summarizes the algorithmic step order; normative
+          processing behavior remains defined by the textual algorithm above.
         </figcaption>
       </figure>
       <p>
-        Trust decisions MUST consume both outputs. A positive mechanical result without an
-        accepted governance source yields cryptographic validity only.
+        Trust decisions MUST consume both outputs. A positive mechanical result
+        without an accepted governance source yields cryptographic validity
+        only.
       </p>
       <p>
-        Deterministic processing requirements: verifiers MUST apply the canonicalization and proof
-        profile declared by
-        <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>; MUST validate
-        <code>previousEventId</code> linkage, sequence monotonicity, and rotation
-        constraints for each processed event; MUST verify every event proof against its declared
-        cryptosuite profile; and MUST emit a
-        deterministic failure code from <a href="#schema-ErrorCode"><code>ErrorCode</code></a>
+        Deterministic processing requirements: verifiers MUST apply the
+        canonicalization and proof profile declared by
+        <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a
+        >; MUST validate <code>previousEventId</code> linkage, sequence
+        monotonicity, and rotation constraints for each processed event; MUST
+        verify every event proof against its declared cryptosuite profile; and
+        MUST emit a deterministic failure code from
+        <a href="#schema-ErrorCode"><code>ErrorCode</code></a>
         whenever any required check fails.
       </p>
     </section>
@@ -992,35 +1606,37 @@
     <section id="proof-profile-baseline">
       <h2>Proof Profile Baseline</h2>
       <p>
-        Unless a profile explicitly overrides this behavior, proof objects for event integrity
-        MUST follow the VC Data Integrity proof model
-        <a href="#ref-vc-data-integrity">[VC-DATA-INTEGRITY]</a> and MUST include
-        <code>type</code>, <code>cryptosuite</code>, and <code>proofValue</code>. ECDSA profiles
-        MUST align identifiers and verification rules with
-        <a href="#ref-vc-di-ecdsa">[VC-DI-ECDSA]</a>.
+        Unless a profile explicitly overrides this behavior, proof objects for
+        event integrity MUST follow the VC Data Integrity proof model
+        <a href="#ref-vc-data-integrity">[VC-DATA-INTEGRITY]</a> and MUST
+        include <code>type</code>, <code>cryptosuite</code>, and
+        <code>proofValue</code>. ECDSA profiles MUST align identifiers and
+        verification rules with <a href="#ref-vc-di-ecdsa">[VC-DI-ECDSA]</a>.
       </p>
       <p>
         Verification method resolution SHOULD align with Controlled Identifiers
         <a href="#ref-controller-document">[CONTROLLER-DOCUMENT]</a>.
       </p>
       <p>
-        Proof verification MUST be deterministic: canonicalization input, signature/proof
-        verification input, and verification method resolution MUST produce identical acceptance
-        outcomes for identical artifacts.
+        Proof verification MUST be deterministic: canonicalization input,
+        signature/proof verification input, and verification method resolution
+        MUST produce identical acceptance outcomes for identical artifacts.
       </p>
       <p>
-        A valid signature/proof already binds the integrity of canonicalized token content.
-        Standalone content-hash claims are protocol overhead in this version and MUST be ignored
-        for acceptance, conflict detection, and merge decisions.
+        A valid signature/proof already binds the integrity of canonicalized
+        token content. Standalone content-hash claims are protocol overhead in
+        this version and MUST be ignored for acceptance, conflict detection, and
+        merge decisions.
       </p>
     </section>
 
     <section id="failure-semantics">
       <h2>Verification Failure Semantics</h2>
       <p>
-        Verification failures MUST be reported using deterministic error codes represented by
-        <a href="#schema-ErrorCode"><code>ErrorCode</code></a> and conveyed through
-        <code>ProblemDetails.code</code>.
+        Verification failures MUST be reported using deterministic error codes
+        represented by
+        <a href="#schema-ErrorCode"><code>ErrorCode</code></a> and conveyed
+        through <code>ProblemDetails.code</code>.
       </p>
       <table class="simple tight">
         <thead>
@@ -1040,11 +1656,17 @@
           </tr>
           <tr>
             <td><code>ERR_TOKEN_CHAIN_LINK_INVALID</code></td>
-            <td>Directed linear token linkage does not fit accepted history constraints.</td>
+            <td>
+              Directed linear token linkage does not fit accepted history
+              constraints.
+            </td>
           </tr>
           <tr>
             <td><code>ERR_UNSUPPORTED_CRYPTOSUITE</code></td>
-            <td>Proof declares a cryptosuite not supported by the verifier profile.</td>
+            <td>
+              Proof declares a cryptosuite not supported by the verifier
+              profile.
+            </td>
           </tr>
           <tr>
             <td><code>ERR_PROOF_VERIFICATION_FAILED</code></td>
@@ -1052,11 +1674,16 @@
           </tr>
           <tr>
             <td><code>ERR_ROTATION_CHAIN_INVALID</code></td>
-            <td>Verification method rotation is not valid under declared chain rules.</td>
+            <td>
+              Verification method rotation is not valid under declared chain
+              rules.
+            </td>
           </tr>
           <tr>
             <td><code>ERR_HISTORY_CONFLICT</code></td>
-            <td>Conflicting candidate history cannot be accepted or reconciled.</td>
+            <td>
+              Conflicting candidate history cannot be accepted or reconciled.
+            </td>
           </tr>
           <tr>
             <td><code>ERR_POLICY_INPUT_UNAVAILABLE</code></td>
@@ -1064,7 +1691,10 @@
           </tr>
           <tr>
             <td><code>ERR_POLICY_REJECTED</code></td>
-            <td>Policy-layer checks reject an otherwise mechanically valid artifact.</td>
+            <td>
+              Policy-layer checks reject an otherwise mechanically valid
+              artifact.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -1076,103 +1706,155 @@
         <span class="status-tag">Architecture Layer</span>
       </p>
       <p>
-        GQTS is the reusable event-log substrate for framework components that already depend on
-        decentralized verifier retrieval under the `/.well-known/gidas/...` namespace, including
-        GDIS and GQSCD artifacts <a href="#ref-gdis-core">[GDIS-CORE]</a>
+        GQTS is the reusable event-log substrate for framework components that
+        already depend on decentralized verifier retrieval under the
+        `/.well-known/gidas/...` namespace, including GDIS and GQSCD artifacts
+        <a href="#ref-gdis-core">[GDIS-CORE]</a>
         <a href="#ref-gqscd-core">[GQSCD-CORE]</a>.
       </p>
 
       <section id="design-log-primitives">
         <h3>Event-Log Properties</h3>
         <p>
-          Referenced mechanisms such as CEL and did:webvh converge on the same core
-          properties: canonical bytes before signing, directed linear history, explicit proof
-          material, and retrieval-portable verification.
+          Referenced mechanisms such as CEL and did:webvh converge on the same
+          core properties: canonical bytes before signing, directed linear
+          history, explicit proof material, and retrieval-portable verification.
           <a href="#ref-cel">[CEL]</a>
           <a href="#ref-didwebvh">[DID-WEBVH]</a>
         </p>
         <p>
-          GQTS keeps these properties as mandatory invariants while allowing application profiles
-          (for example GDIS bindings, trust registries, or device evidence publication) to define
-          their own event payload semantics.
+          GQTS keeps these properties as mandatory invariants while allowing
+          application profiles (for example GDIS bindings, trust registries, or
+          device evidence publication) to define their own event payload
+          semantics.
         </p>
       </section>
 
       <section id="design-rfc8615-registration">
         <h3>Well-Known Registration Baseline</h3>
         <p>
-          This profile uses the `/.well-known/gidas/` umbrella namespace, with GQTS resources under
-          `/.well-known/gidas/gqts/`. Deployments using this namespace SHOULD follow RFC 8615 and
-          IANA well-known registration procedures
+          This profile uses the `/.well-known/gidas/` umbrella namespace, with
+          GQTS resources under `/.well-known/gidas/gqts/`. Deployments using
+          this namespace SHOULD follow RFC 8615 and IANA well-known registration
+          procedures
           <a href="#ref-rfc8615">[RFC8615]</a>
           <a href="#ref-iana-wku">[IANA-WKU]</a>.
         </p>
       </section>
-
     </section>
 
     <section id="conformance-classes">
       <h2>Conformance Classes</h2>
-      <section id="cc-host">
-        <h3>Host Class</h3>
-        <p>
-          A Host implementation conforms if it serves required OpenAPI operations for at least one
-          service type, enforces append-only history storage semantics, supports conditional
-          retrieval, and emits deterministic event representations.
-        </p>
-      </section>
+      <table class="simple tight">
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Required Requirements</th>
+            <th>Required Outcomes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="cc-host">
+            <td>Host</td>
+            <td>
+              REQ-GQTS-01, REQ-GQTS-02, REQ-GQTS-03, REQ-GQTS-05, REQ-GQTS-06,
+              REQ-GQTS-07
+            </td>
+            <td>
+              Governance-scoped discovery, append-only event retrieval,
+              asynchronous ingest, and immutable event addressing with
+              deterministic acceptance rules.
+            </td>
+          </tr>
+          <tr id="cc-verifier">
+            <td>Verifier</td>
+            <td>
+              REQ-GQTS-01, REQ-GQTS-03, REQ-GQTS-04, REQ-GQTS-05, REQ-GQTS-07
+            </td>
+            <td>
+              Deterministic execution of the
+              <a href="#verifier-algorithm">Mechanical Verifier Algorithm</a>
+              with separate outputs for mechanical validity and recognition
+              status.
+            </td>
+          </tr>
+          <tr id="cc-scheme-publisher">
+            <td>Scheme Publisher</td>
+            <td>REQ-GQTS-01, REQ-GQTS-02, REQ-GQTS-03</td>
+            <td>
+              Publication of governance-scoped descriptors and endpoint-kind
+              mappings that remain consistent with declared protocol invariants.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-      <section id="cc-verifier">
-        <h3>Verifier Class</h3>
-        <p>
-          A Verifier implementation conforms if it executes
-          <a href="#verifier-algorithm">Mechanical Verifier Algorithm</a>, validates cryptographic
-          proofs and history-link invariants, and outputs separate mechanical and governance-aware
-          result layers.
-        </p>
-      </section>
-
-      <section id="cc-scheme-publisher">
-        <h3>Scheme Publisher Class</h3>
-        <p>
-          A Scheme Publisher implementation conforms if it publishes normalized governance-scoped
-          scheme descriptors and keeps profile declarations consistent with the OpenAPI schema
-          contracts.
-        </p>
-      </section>
-
-      <section id="conformance-reporting">
-        <h3>Conformance Reporting Requirements</h3>
-        <p>
-          A conformance claim MUST be accompanied by a machine-readable conformance report with at
-          least the following fields:
-        </p>
-        <ul>
-          <li>implementation identifier and version;</li>
-          <li>declared conformance class set;</li>
-          <li>requirement coverage list (`REQ-GQTS-xx` identifiers);</li>
-          <li>test assertion identifiers and execution results;</li>
-          <li>cryptosuite support declaration and verification profile;</li>
-          <li>failure-code coverage for negative tests using `ErrorCode` values;</li>
-          <li>policy input sources used during recognition-status evaluation.</li>
-        </ul>
-      </section>
+    <section id="conformance-reporting">
+      <h2>Conformance Reporting</h2>
+      <p>
+        A conformance claim MUST be accompanied by a machine-readable
+        conformance report.
+      </p>
+      <table class="simple tight">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Requirement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>implementationId</code>, <code>version</code></td>
+            <td>Unique implementation identifier and version string.</td>
+          </tr>
+          <tr>
+            <td><code>conformanceClasses</code></td>
+            <td>Declared conformance class set.</td>
+          </tr>
+          <tr>
+            <td><code>requirementCoverage</code></td>
+            <td>Coverage list using `REQ-GQTS-xx` identifiers.</td>
+          </tr>
+          <tr>
+            <td><code>testResults</code></td>
+            <td>Test assertion identifiers and execution outcomes.</td>
+          </tr>
+          <tr>
+            <td><code>cryptosuiteProfile</code></td>
+            <td>
+              Supported cryptosuites and verification profile declaration.
+            </td>
+          </tr>
+          <tr>
+            <td><code>negativeTestCoverage</code></td>
+            <td>Failure-code coverage for `ErrorCode` negative tests.</td>
+          </tr>
+          <tr>
+            <td><code>policyInputs</code></td>
+            <td>
+              Governance/policy input sources used for recognition-status
+              evaluation.
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
     <section id="security-considerations">
       <h2>Security Considerations</h2>
       <ul>
         <li>
-          Accepting event material without full canonicalization and proof verification breaks
-          tamper-evidence guarantees.
+          Accepting event material without full canonicalization and proof
+          verification breaks tamper-evidence guarantees.
         </li>
         <li>
-          Fetching from multiple hosts improves availability but requires strict token-chain/proof
-          checks on all fetched variants.
+          Fetching from multiple hosts improves availability but requires strict
+          token-chain/proof checks on all fetched variants.
         </li>
         <li>
-          Compromise handling MUST be explicit in history and policy processing, not hidden in
-          mutable metadata edits.
+          Compromise handling MUST be explicit in history and policy processing,
+          not hidden in mutable metadata edits.
         </li>
       </ul>
     </section>
@@ -1180,14 +1862,17 @@
     <section id="privacy-considerations">
       <h2>Privacy Considerations</h2>
       <ul>
-        <li>Event payloads SHOULD minimize personal data and prefer scoped or blinded references.</li>
         <li>
-          Globally stable identifiers can be highly linkable; profiles SHOULD define scoped or
-          blinded derivations when compatibility permits.
+          Event payloads SHOULD minimize personal data and prefer scoped or
+          blinded references.
         </li>
         <li>
-          Public host operation SHOULD include anti-enumeration controls and auditable access
-          policy where required.
+          Globally stable identifiers can be highly linkable; profiles SHOULD
+          define scoped or blinded derivations when compatibility permits.
+        </li>
+        <li>
+          Public host operation SHOULD include anti-enumeration controls and
+          auditable access policy where required.
         </li>
       </ul>
     </section>
@@ -1195,9 +1880,10 @@
     <section id="implementation-status-note" class="informative">
       <h2>Implementation Status Note</h2>
       <p>
-        A reference implementation and API-focused example set for GQTS Core is in active
-        development. This note is informative only and does not alter conformance requirements in
-        this document or in <a href="./openapi.yaml">`openapi.yaml`</a>.
+        A reference implementation and API-focused example set for GQTS Core is
+        in active development. The first reference implementation is the
+        stabilization point for freezing currently indicative ("suuntaa
+        antavia") OpenAPI schemas into normative contracts.
       </p>
     </section>
 
@@ -1209,22 +1895,26 @@
         <ul>
           <li id="ref-rfc2119">
             <a href="https://www.rfc-editor.org/rfc/rfc2119"
-              >[RFC2119] Key words for use in RFCs to Indicate Requirement Levels</a
+              >[RFC2119] Key words for use in RFCs to Indicate Requirement
+              Levels</a
             >
           </li>
           <li id="ref-rfc8174">
             <a href="https://www.rfc-editor.org/rfc/rfc8174"
-              >[RFC8174] Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a
+              >[RFC8174] Ambiguity of Uppercase vs Lowercase in RFC 2119 Key
+              Words</a
             >
           </li>
           <li id="ref-rfc6838">
             <a href="https://www.rfc-editor.org/rfc/rfc6838"
-              >[RFC6838] Media Type Specifications and Registration Procedures</a
+              >[RFC6838] Media Type Specifications and Registration
+              Procedures</a
             >
           </li>
           <li id="ref-rfc8259">
             <a href="https://www.rfc-editor.org/rfc/rfc8259"
-              >[RFC8259] The JavaScript Object Notation (JSON) Data Interchange Format</a
+              >[RFC8259] The JavaScript Object Notation (JSON) Data Interchange
+              Format</a
             >
           </li>
           <li id="ref-rfc8615">
@@ -1233,7 +1923,9 @@
             >
           </li>
           <li id="ref-rfc9110">
-            <a href="https://www.rfc-editor.org/rfc/rfc9110">[RFC9110] HTTP Semantics</a>
+            <a href="https://www.rfc-editor.org/rfc/rfc9110"
+              >[RFC9110] HTTP Semantics</a
+            >
           </li>
           <li id="ref-rfc8785">
             <a href="https://www.rfc-editor.org/rfc/rfc8785"
@@ -1246,10 +1938,13 @@
             >
           </li>
           <li id="ref-infra">
-            <a href="https://infra.spec.whatwg.org/">[INFRA] WHATWG Infra Standard</a>
+            <a href="https://infra.spec.whatwg.org/"
+              >[INFRA] WHATWG Infra Standard</a
+            >
           </li>
           <li id="ref-iana-wku">
-            <a href="https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml"
+            <a
+              href="https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml"
               >[IANA-WKU] IANA Well-Known URI Registry</a
             >
           </li>
@@ -1294,7 +1989,9 @@
             <a href="https://z-base.github.io/gdis/">[GDIS-CORE] GDIS Core</a>
           </li>
           <li id="ref-gqscd-core">
-            <a href="https://z-base.github.io/gqscd/">[GQSCD-CORE] GQSCD Core</a>
+            <a href="https://z-base.github.io/gqscd/"
+              >[GQSCD-CORE] GQSCD Core</a
+            >
           </li>
         </ul>
       </section>
@@ -1309,7 +2006,8 @@
           </li>
           <li id="ref-eidas-consolidated">
             <a href="https://eur-lex.europa.eu/eli/reg/2014/910/2024-10-18/eng"
-              >[EU-910-CONS] Regulation (EU) No 910/2014 consolidated view (ELI)</a
+              >[EU-910-CONS] Regulation (EU) No 910/2014 consolidated view
+              (ELI)</a
             >
           </li>
           <li id="ref-eu-2024-1183">
@@ -1318,14 +2016,16 @@
             >
           </li>
           <li id="ref-eu-trusted-lists">
-            <a href="https://digital-strategy.ec.europa.eu/en/policies/eu-trusted-lists"
+            <a
+              href="https://digital-strategy.ec.europa.eu/en/policies/eu-trusted-lists"
               >[EU-TRUSTED-LISTS] EU Trusted Lists</a
             >
           </li>
           <li id="ref-etsi-319401">
             <a href="https://www.etsi.org/deliver/etsi_en/319400_319499/319401/"
-              >[ETSI-319401] ETSI EN 319 401 Electronic Signatures and Infrastructures (ESI);
-              General Policy Requirements for Trust Service Providers</a
+              >[ETSI-319401] ETSI EN 319 401 Electronic Signatures and
+              Infrastructures (ESI); General Policy Requirements for Trust
+              Service Providers</a
             >
           </li>
         </ul>
