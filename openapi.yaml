@@ -2,13 +2,15 @@ openapi: 3.1.2
 info:
   title: GQTS Core API
   version: 1.0.0-draft
-  summary: OpenAPI normative surface for GQTS Core discovery and event-log replication.
+  summary: OpenAPI normative surface for GQTS Core discovery and linear signed-token replication.
   description: |
     This OpenAPI file is the normative endpoint contract for GQTS Core.
 
     Semantics:
     - GET operations are synchronous retrieval operations.
     - POST ingest/gossip operations are logically asynchronous and return 202 Accepted.
+    - Integrity acceptance is based on proof/signature verification over canonicalized token content.
+    - Standalone content-hash fields are not acceptance inputs and MUST be ignored.
 
     Versioning strategy:
     - Major/minor profile semantics are encoded in `info.version` and media types.
@@ -33,19 +35,19 @@ security: []
 x-gqts-requirements:
   REQ-GQTS-01: Governance-scoped scheme discovery.
   REQ-GQTS-02: Endpoint-kind taxonomy publication.
-  REQ-GQTS-03: Service descriptor head commitment publication.
-  REQ-GQTS-04: Low-cost divergence detection via compact head metadata.
-  REQ-GQTS-05: Append-only log retrieval.
+  REQ-GQTS-03: Service descriptor active token-chain state publication.
+  REQ-GQTS-04: Low-cost head-token synchronization and merge-reconciliation metadata publication.
+  REQ-GQTS-05: Append-only linear token-chain retrieval.
   REQ-GQTS-06: Asynchronous ingest and receipt model.
-  REQ-GQTS-07: Immutable event addressing.
+  REQ-GQTS-07: Immutable token addressing.
 
 tags:
   - name: scheme
     description: Governance-scoped scheme metadata.
   - name: type
-    description: Trust-service instance metadata and current head commitments.
+    description: Trust-service instance metadata and current token-chain head state.
   - name: event
-    description: Append-only event log retrieval and ingest.
+    description: Append-only linear signed-token log retrieval and ingest.
 
 paths:
   /.well-known/gidas/gqts/scheme/{governanceCode}:
@@ -122,7 +124,7 @@ paths:
       summary: Get service descriptor.
       x-gqts-requirement: REQ-GQTS-03
       description: |
-        Returns metadata for one trust-service instance, including the current event-log head commitment.
+        Returns metadata for one trust-service instance, including the current token-chain head state.
       parameters:
         - $ref: '#/components/parameters/ServiceId'
         - $ref: '#/components/parameters/IfNoneMatch'
@@ -155,13 +157,13 @@ paths:
       summary: Get event log head or event page.
       x-gqts-requirement: REQ-GQTS-05
       description: |
-        Returns either a compact head view (default) or paged events for an append-only log.
-        Implementations SHOULD use conditional retrieval and compare `headDigest` before expensive sync work.
+        Returns either a compact head-token view (default) or paged tokens for an append-only linear chain.
+        Implementations SHOULD use conditional retrieval and compare `headTokenId` before expensive sync work.
       parameters:
         - $ref: '#/components/parameters/LogId'
         - $ref: '#/components/parameters/IfNoneMatch'
         - $ref: '#/components/parameters/View'
-        - $ref: '#/components/parameters/FromEventId'
+        - $ref: '#/components/parameters/FromTokenId'
         - $ref: '#/components/parameters/Limit'
       responses:
         '200':
@@ -191,8 +193,8 @@ paths:
       summary: Submit an event for ingest/gossip.
       x-gqts-requirement: REQ-GQTS-06
       description: |
-        Accepts an event envelope for asynchronous processing.
-        Successful acceptance returns `202 Accepted`; replication and merge outcomes are observed via GET event-log views.
+        Accepts a signed history token for asynchronous processing.
+        Successful acceptance returns `202 Accepted`; replication and merge-reconciliation outcomes are observed via GET event-log views.
       parameters:
         - $ref: '#/components/parameters/LogId'
       requestBody:
@@ -225,17 +227,17 @@ paths:
     get:
       tags: [event]
       operationId: getEventHeadMeta
-      summary: Get compact event-head metadata.
+      summary: Get compact token-chain head metadata.
       x-gqts-requirement: REQ-GQTS-04
       description: |
-        Returns a compact head commitment view for opportunistic synchronization.
-        Peers SHOULD compare this result before requesting event pages or merge processing.
+        Returns compact head-token metadata for opportunistic synchronization.
+        Peers SHOULD compare this result before requesting token pages or merge-reconciliation processing.
       parameters:
         - $ref: '#/components/parameters/LogId'
         - $ref: '#/components/parameters/IfNoneMatch'
       responses:
         '200':
-          description: Event-head metadata.
+          description: Token-chain head metadata.
           headers:
             ETag:
               $ref: '#/components/headers/EntityTag'
@@ -259,9 +261,9 @@ paths:
     get:
       tags: [event]
       operationId: getEventById
-      summary: Get immutable event object.
+      summary: Get immutable history token.
       x-gqts-requirement: REQ-GQTS-07
-      description: Retrieves one immutable event object by identifier.
+      description: Retrieves one immutable signed history token by identifier.
       parameters:
         - $ref: '#/components/parameters/LogId'
         - $ref: '#/components/parameters/EventId'
@@ -309,7 +311,7 @@ components:
       name: logId
       in: path
       required: true
-      description: Event log namespace identifier.
+      description: Signed-token history namespace identifier.
       schema:
         $ref: '#/components/schemas/Identifier'
 
@@ -317,7 +319,7 @@ components:
       name: eventId
       in: path
       required: true
-      description: Immutable event identifier.
+      description: Immutable signed-token identifier.
       schema:
         $ref: '#/components/schemas/Identifier'
 
@@ -333,17 +335,17 @@ components:
       name: view
       in: query
       required: false
-      description: Controls head-only versus paged-event retrieval.
+      description: Controls head-only versus paged-token retrieval.
       schema:
         type: string
         enum: [head, events]
         default: head
 
-    FromEventId:
-      name: fromEventId
+    FromTokenId:
+      name: fromTokenId
       in: query
       required: false
-      description: Resume cursor for paged event retrieval.
+      description: Resume cursor for paged token retrieval.
       schema:
         $ref: '#/components/schemas/Identifier'
 
@@ -360,11 +362,11 @@ components:
 
   headers:
     EntityTag:
-      description: Entity tag representing head commitment or immutable event digest.
+      description: Entity tag representing current head token or immutable token object version.
       schema:
         type: string
     CacheControl:
-      description: Cache policy for append-only views (typically short freshness with validators).
+      description: Cache policy for append-only token-chain views (typically short freshness with validators).
       schema:
         type: string
     CacheControlImmutable:
@@ -397,22 +399,20 @@ components:
       pattern: '^[A-Za-z0-9._:-]+$'
       examples: [a8bb9d18-c3bc-4f5b-9158-3ce0d48f4f8c, eu-qts-registry]
 
-    DigestTuple:
-      type: string
-      description: Algorithm token plus digest value (`algorithm:value`).
-      pattern: '^[A-Za-z0-9._-]+:[A-Za-z0-9_-]+$'
-      examples: ['SHA-256:3f7zcM55W3A8fAq7sP6q18gw4ulvYz6oVaQqM4jLw8Q']
-
     UriDigest:
       type: object
-      required: [uri, digest]
+      description: |
+        Verification source reference. Legacy schema name retained for compatibility.
+        Hash claims are not part of acceptance semantics in this profile.
+      required: [uri, controller]
       additionalProperties: false
       properties:
         uri:
           type: string
           format: uri
-        digest:
-          $ref: '#/components/schemas/DigestTuple'
+        controller:
+          type: string
+          description: Entity/controller identifier that asserts the source material.
 
     SchemeDescriptor:
       type: object
@@ -422,8 +422,9 @@ components:
         - governanceCode
         - version
         - canonicalization
-        - hashAlgorithm
+        - integrityModel
         - proofSuites
+        - chainModel
         - endpointKinds
         - discovery
       properties:
@@ -437,11 +438,17 @@ components:
           examples: [v1]
         canonicalization:
           type: string
-          description: Canonicalization profile for event payload hashing.
+          description: Canonicalization profile for deterministic signed-token verification input.
           examples: [JCS]
-        hashAlgorithm:
+        integrityModel:
           type: string
-          examples: [SHA-256]
+          const: signature-bound-content
+          description: |
+            Protocol acceptance MUST be based on signature/proof verification of canonicalized token content.
+            Standalone content-hash claims MUST be ignored.
+        chainModel:
+          type: string
+          enum: [directed-linear-signed-token-chain]
         proofSuites:
           type: array
           minItems: 1
@@ -595,14 +602,25 @@ components:
         eventLog:
           type: object
           additionalProperties: false
-          required: [logId, headEventId, headDigest]
+          required: [logId, headTokenId, activeVerificationMethod]
           properties:
             logId:
               $ref: '#/components/schemas/Identifier'
-            headEventId:
+            headTokenId:
               $ref: '#/components/schemas/Identifier'
-            headDigest:
-              $ref: '#/components/schemas/DigestTuple'
+            activeVerificationMethod:
+              type: string
+              description: Verification method identifier that MUST validate the current head token.
+            reportEndpoint:
+              type: string
+              format: uri-reference
+              description: Optional endpoint for invalid-token reporting when specified by active history tokens.
+            gossipEndpoints:
+              type: array
+              description: Replication targets declared by the most recent valid token.
+              items:
+                type: string
+                format: uri-reference
             updatedAt:
               type: string
               format: date-time
@@ -615,7 +633,7 @@ components:
     EventLogView:
       type: object
       additionalProperties: false
-      required: [kind, logId, view, headEventId, headDigest, events]
+      required: [kind, logId, view, headTokenId, activeVerificationMethod, events]
       properties:
         kind:
           type: string
@@ -625,31 +643,37 @@ components:
         view:
           type: string
           enum: [head, events]
-        headEventId:
+        headTokenId:
           $ref: '#/components/schemas/Identifier'
-        headDigest:
-          $ref: '#/components/schemas/DigestTuple'
+        activeVerificationMethod:
+          type: string
+        linearChain:
+          type: boolean
+          const: true
         events:
           type: array
           items:
             $ref: '#/components/schemas/EventEnvelope'
-        nextFromEventId:
+        nextFromTokenId:
           $ref: '#/components/schemas/Identifier'
 
     EventHeadMeta:
       type: object
       additionalProperties: false
-      required: [kind, logId, headEventId, headDigest, eventCount, updatedAt]
+      required: [kind, logId, headTokenId, activeVerificationMethod, eventCount, updatedAt]
       properties:
         kind:
           type: string
           const: event
         logId:
           $ref: '#/components/schemas/Identifier'
-        headEventId:
+        headTokenId:
           $ref: '#/components/schemas/Identifier'
-        headDigest:
-          $ref: '#/components/schemas/DigestTuple'
+        activeVerificationMethod:
+          type: string
+        linearChain:
+          type: boolean
+          const: true
         eventCount:
           type: integer
           minimum: 0
@@ -662,6 +686,10 @@ components:
 
     EventEnvelope:
       type: object
+      description: |
+        Signed history token.
+        Acceptance is determined by schema validity, directed linear chain-link validity, and proof verification.
+        Standalone content-hash claims are ignored by protocol.
       additionalProperties: false
       required:
         - eventId
@@ -669,8 +697,9 @@ components:
         - sequence
         - createdAt
         - eventType
-        - eventDigest
-        - prevEventDigests
+        - previousEventId
+        - actorController
+        - declaredVerificationMethod
         - payload
         - proofs
       properties:
@@ -686,15 +715,65 @@ components:
           format: date-time
         eventType:
           type: string
-          examples: [publish, revoke, rotate, merge]
-        eventDigest:
-          $ref: '#/components/schemas/DigestTuple'
-        prevEventDigests:
+          enum: [genesis, publish, revoke, rotate, merge, report-config]
+        previousEventId:
+          oneOf:
+            - $ref: '#/components/schemas/Identifier'
+            - type: 'null'
+          description: |
+            Previous token pointer in the directed linear history.
+            MUST be null only for the genesis token.
+        actorController:
+          type: string
+          description: Entity/controller identifier whose intention is asserted by this token.
+        delegatedIdentityContext:
+          type: object
+          additionalProperties: false
+          properties:
+            gdisSource:
+              type: string
+              format: uri-reference
+            gqscdControllerDid:
+              type: string
+            pidDelegationReference:
+              type: string
+        declaredVerificationMethod:
+          type: string
+          description: Verification method that MUST validate this token signature.
+        nextVerificationMethod:
+          type: string
+          description: |
+            Next verification method activated by a rotate token.
+            MUST be present for rotate tokens.
+        mergedCandidateHeadEventIds:
           type: array
-          description: Parent head commitments. Merge events usually include two or more entries.
+          description: Candidate heads reconciled by a merge token while keeping a single canonical previousEventId.
           minItems: 1
           items:
-            $ref: '#/components/schemas/DigestTuple'
+            $ref: '#/components/schemas/Identifier'
+        gossipEndpoints:
+          type: array
+          description: Replication targets to which valid tokens SHOULD be gossiped.
+          items:
+            type: string
+            format: uri-reference
+        reportEndpoint:
+          type: string
+          format: uri-reference
+          description: Optional endpoint for reporting invalid token candidates.
+        blindVerificationMaterial:
+          type: object
+          additionalProperties: false
+          properties:
+            scheme:
+              type: string
+              enum: [oprf-blind, bbs-blind]
+            materialReference:
+              type: string
+              format: uri-reference
+            assertion:
+              type: object
+              additionalProperties: true
         payload:
           type: object
           additionalProperties: true
@@ -703,9 +782,30 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/Proof'
+      allOf:
+        - if:
+            properties:
+              eventType:
+                const: genesis
+          then:
+            properties:
+              previousEventId:
+                type: 'null'
+        - if:
+            properties:
+              eventType:
+                const: rotate
+          then:
+            properties:
+              nextVerificationMethod:
+                type: string
+            required: [nextVerificationMethod]
 
     Proof:
       type: object
+      description: |
+        Cryptographic proof object used for deterministic acceptance.
+        Proof verification is the integrity primitive; separate hash claims are non-authoritative.
       additionalProperties: false
       required: [type, cryptosuite, verificationMethod, created, proofPurpose, proofValue]
       properties:
@@ -731,10 +831,11 @@ components:
       enum:
         - ERR_SCHEMA_VALIDATION
         - ERR_CANONICALIZATION_FAILURE
-        - ERR_DIGEST_MISMATCH
+        - ERR_TOKEN_CHAIN_LINK_INVALID
         - ERR_UNSUPPORTED_CRYPTOSUITE
         - ERR_PROOF_VERIFICATION_FAILED
-        - ERR_HISTORY_DIVERGENCE_UNRESOLVED
+        - ERR_ROTATION_CHAIN_INVALID
+        - ERR_HISTORY_CONFLICT
         - ERR_POLICY_INPUT_UNAVAILABLE
         - ERR_POLICY_REJECTED
 
@@ -745,8 +846,8 @@ components:
       properties:
         event:
           $ref: '#/components/schemas/EventEnvelope'
-        expectedHeadDigest:
-          $ref: '#/components/schemas/DigestTuple'
+        expectedHeadEventId:
+          $ref: '#/components/schemas/Identifier'
         correlationId:
           type: string
           minLength: 8

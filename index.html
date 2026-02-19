@@ -112,9 +112,9 @@
         trust-service verification material under the GIDAS framework.
       </p>
       <p>
-        GQTS Core defines discovery, append-only history invariants, divergence detection, merge
-        semantics, and a deterministic verifier algorithm. Endpoint contracts are normative in
-        <a href="./openapi.yaml">openapi.yaml</a> and rendered at
+        GQTS Core defines discovery, append-only directed linear signed-token history invariants,
+        merge-reconciliation semantics, and a deterministic verifier algorithm. Endpoint contracts
+        are normative in <a href="./openapi.yaml">openapi.yaml</a> and rendered at
         <a href="./openapi/">./openapi/</a>.
       </p>
     </section>
@@ -239,24 +239,22 @@
           replication substrate for verifier-checkable trust-service evidence.
         </li>
       </ul>
-    </section>
+      <section id="framework-interaction">
+        <h3>Framework Interaction</h3>
+        <p>
+          GQTS Core is the publication and verifier-retrieval substrate used by GIDAS component
+          artifacts. GDIS defines identity-binding evidence objects
+          <a href="#ref-gdis-core">[GDIS-CORE]</a>, and GQSCD defines device/controller assurance
+          evidence objects <a href="#ref-gqscd-core">[GQSCD-CORE]</a>. GQTS defines host, event-log,
+          and deterministic verification behavior for those artifacts without redefining their
+          component-specific semantics.
+        </p>
 
-    <section id="cross-spec-integration">
-      <h2>Framework Interaction</h2>
-      <p>
-        GQTS Core is the publication and verifier-retrieval substrate used by GIDAS component
-        artifacts. GDIS defines identity-binding evidence objects
-        <a href="#ref-gdis-core">[GDIS-CORE]</a>, and GQSCD defines device/controller assurance
-        evidence objects <a href="#ref-gqscd-core">[GQSCD-CORE]</a>. GQTS defines host, event-log,
-        and deterministic verification behavior for those artifacts without redefining their
-        component-specific semantics.
-      </p>
-
-      <p class="informative">
-        The following figures are informative presentation aids and do not define additional
-        conformance requirements.
-      </p>
-      <div class="gqts-visual-grid informative">
+        <p class="informative">
+          The following figures are informative presentation aids and do not define additional
+          conformance requirements.
+        </p>
+        <div class="gqts-visual-grid informative">
           <figure class="gqts-visual-card">
             <p class="gqts-figure-title">Framework Interaction</p>
             <svg
@@ -345,6 +343,7 @@
             </figcaption>
           </figure>
         </div>
+      </section>
     </section>
 
     <section id="scope">
@@ -352,7 +351,7 @@
       <p>This specification defines:</p>
       <ul>
         <li>a `/.well-known/` discovery profile for GQTS resources;</li>
-        <li>append-only event history invariants and merge rules;</li>
+        <li>append-only directed linear signed-token history invariants and merge rules;</li>
         <li>open-participation replication with opportunistic synchronization;</li>
         <li>
           a mechanical verifier algorithm that separates cryptographic validity from recognition
@@ -373,13 +372,13 @@
         <dt><dfn>GQTS host</dfn></dt>
         <dd>
           An HTTP origin that serves GQTS resources and MAY ingest, replicate, and gossip
-          append-only event history material.
+          append-only signed-token history material.
         </dd>
 
         <dt><dfn>service descriptor</dfn></dt>
         <dd>
           A machine-readable object describing one trust-service instance, its type, and its
-          current event-log head commitment.
+          current token-chain head state.
         </dd>
 
         <dt><dfn>scheme descriptor</dfn></dt>
@@ -390,26 +389,26 @@
 
         <dt><dfn>event namespace</dfn></dt>
         <dd>
-          A scoped event stream identified by a log identifier where entries form an append-only
-          history.
+          A scoped signed-token stream identified by a log identifier where entries form an
+          append-only directed linear history.
         </dd>
 
-        <dt><dfn>head digest</dfn></dt>
+        <dt><dfn>head token</dfn></dt>
         <dd>
-          Commitment to the latest accepted history head for an <a>event namespace</a>, used for
-          cheap divergence detection before heavy synchronization.
+          Identifier of the latest accepted token for an <a>event namespace</a>, used for
+          cheap synchronization checks before heavy retrieval.
         </dd>
 
-        <dt><dfn>merge event</dfn></dt>
+        <dt><dfn>merge token</dfn></dt>
         <dd>
-          An event entry that references two or more parent heads to represent explicit history
-          convergence.
+          A signed token that reconciles competing candidate heads while preserving one canonical
+          previous-token pointer in the accepted chain.
         </dd>
 
         <dt><dfn>mechanical validity</dfn></dt>
         <dd>
           A verifier result stating that schema constraints, signatures/proofs, canonicalization,
-          and hash-chain requirements were satisfied.
+          and signed-token chain requirements were satisfied.
         </dd>
 
         <dt><dfn>recognition status</dfn></dt>
@@ -485,7 +484,7 @@
                   ><code>getTypeDescriptor</code></a
                 >
               </td>
-              <td>Fetch one trust-service descriptor with current head commitment.</td>
+              <td>Fetch one trust-service descriptor with current head-token state.</td>
             </tr>
             <tr>
               <td>
@@ -648,7 +647,7 @@
               <td>
                 <a href="#schema-ServiceDescriptor"><code>ServiceDescriptor</code></a>
               </td>
-              <td>Mutable with explicit head commitment references.</td>
+              <td>Mutable with explicit head-token references.</td>
             </tr>
             <tr>
               <td><code>event</code></td>
@@ -664,7 +663,7 @@
                 <a href="#schema-EventEnvelope"><code>EventEnvelope</code></a>,
                 <a href="#schema-AsyncReceipt"><code>AsyncReceipt</code></a>
               </td>
-              <td>Append-only history with explicit merge events.</td>
+              <td>Append-only history with explicit merge tokens.</td>
             </tr>
           </tbody>
         </table>
@@ -696,13 +695,13 @@
         </li>
         <li id="req-gqts-03">
           <strong>REQ-GQTS-03 Service Descriptor Integrity</strong>:
-          Implementations MUST expose current service head commitments through
+          Implementations MUST expose current service head-token state through
           <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a> using
           <a href="#schema-ServiceDescriptor"><code>ServiceDescriptor</code></a>.
         </li>
         <li id="req-gqts-04">
           <strong>REQ-GQTS-04 Low-Cost Divergence Detection</strong>:
-          Verifiers and peers SHOULD compare compact head commitments via
+          Verifiers and peers SHOULD compare compact head-token metadata via
           <a href="#op-getEventHeadMeta"><code>getEventHeadMeta</code></a> before heavy sync work.
         </li>
         <li id="req-gqts-05">
@@ -803,21 +802,21 @@
             This version defines no history-compaction mechanism; accepted events and proof
             material remain verification inputs while they are published by the controller.
           </li>
-          <li>Divergence MUST be detectable through differing head commitments.</li>
+          <li>Divergence MUST be detectable through differing <a>head token</a> values.</li>
           <li>
-            Merge MUST be explicit: a merge is represented as a new <a>merge event</a> referencing
-            parent heads.
+            Merge MUST be explicit: a merge is represented as a new <a>merge token</a> that
+            reconciles candidate heads.
           </li>
           <li>
             Each accepted event MUST be independently retrievable and verifiable by event identifier
             (no opaque chunk-only verification mode in this version).
           </li>
           <li>
-            Verification MUST be mechanical: canonicalization, digest-linking, and proof checks are
-            deterministic.
+            Verification MUST be mechanical: canonicalization, token-link checks, and proof checks
+            are deterministic.
           </li>
           <li>
-            Hosts MUST NOT trigger heavy merge work unless a <a>head digest</a> mismatch is
+            Hosts MUST NOT trigger heavy merge work unless a <a>head token</a> mismatch is
             detected.
           </li>
         </ul>
@@ -842,7 +841,7 @@
       <section id="caching-rules">
         <h3>Caching and Conditional Retrieval</h3>
         <p>
-          Hosts SHOULD expose `ETag` values aligned with head commitments. Verifiers and peers
+          Hosts SHOULD expose `ETag` values aligned with the current <a>head token</a>. Verifiers and peers
           SHOULD use conditional retrieval (`If-None-Match`) before transferring event pages
           <a href="#ref-rfc9110">[RFC9110]</a>. Immutable event retrieval and append-only log views
           MUST declare cache behavior explicitly in the OpenAPI contract.
@@ -876,14 +875,15 @@
           with conditional headers.
         </li>
         <li>
-          If head commitments from peer hosts are equal, skip heavy merge processing.
+          If <a>head token</a> values from peer hosts are equal, skip heavy merge processing.
         </li>
         <li>
-          If head commitments differ, fetch only the missing event chain segments and validate
-          canonicalization, digest links, and proof material for each reported head.
+          If <a>head token</a> values differ, fetch only missing chain segments and validate
+          canonicalization, previous-token linkage, and proof material for each candidate head.
         </li>
         <li>
-          Accept merge only when represented as an explicit event that links parent heads.
+          Accept merge only when represented as an explicit <a>merge token</a> that reconciles
+          candidate heads while preserving one canonical previous-token pointer.
         </li>
         <li>
           Produce separate outputs: (a) <a>mechanical validity</a>, (b)
@@ -901,7 +901,8 @@
           <title id="verifier-pipeline-title">Verifier pipeline</title>
           <desc id="verifier-pipeline-desc">
             The verifier resolves descriptors, checks head divergence, fetches missing chain
-            segments, verifies proofs and digests, and emits separate mechanical and policy outputs.
+            segments, verifies proofs and token-link constraints, and emits separate mechanical and
+            policy outputs.
           </desc>
           <rect x="18" y="76" width="148" height="58" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
           <text x="92" y="100" text-anchor="middle" font-size="13" fill="#173a69">Resolve</text>
@@ -914,7 +915,7 @@
           <text x="447" y="118" text-anchor="middle" font-size="12" fill="#7a5319">chain segments</text>
           <rect x="554" y="76" width="146" height="58" rx="8" fill="#f4f5f8" stroke="#545f73" />
           <text x="627" y="100" text-anchor="middle" font-size="13" fill="#2e3441">Verify</text>
-          <text x="627" y="118" text-anchor="middle" font-size="12" fill="#2e3441">schema + digest + proof</text>
+          <text x="627" y="118" text-anchor="middle" font-size="12" fill="#2e3441">schema + chain + proof</text>
           <rect x="726" y="30" width="136" height="58" rx="8" fill="#e9f6ef" stroke="#2d7b50" />
           <text x="794" y="54" text-anchor="middle" font-size="13" fill="#1f5f3b">Output A</text>
           <text x="794" y="72" text-anchor="middle" font-size="12" fill="#1f5f3b">Mechanical Validity</text>
@@ -942,11 +943,12 @@
         accepted governance source yields cryptographic validity only.
       </p>
       <p>
-        Deterministic processing requirements: verifiers MUST apply the canonicalization and hash
-        algorithm declared by
-        <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>; MUST recompute and
-        compare <code>eventDigest</code> and parent commitment tuples for each processed event;
-        MUST verify every event proof against its declared cryptosuite profile; and MUST emit a
+        Deterministic processing requirements: verifiers MUST apply the canonicalization and proof
+        profile declared by
+        <a href="#schema-SchemeDescriptor"><code>SchemeDescriptor</code></a>; MUST validate
+        <code>previousEventId</code> linkage, sequence monotonicity, and rotation
+        constraints for each processed event; MUST verify every event proof against its declared
+        cryptosuite profile; and MUST emit a
         deterministic failure code from <a href="#schema-ErrorCode"><code>ErrorCode</code></a>
         whenever any required check fails.
       </p>
@@ -967,9 +969,14 @@
         <a href="#ref-controller-document">[CONTROLLER-DOCUMENT]</a>.
       </p>
       <p>
-        Proof verification MUST be deterministic: canonicalization input, hash input, signature
-        input, and verification method resolution MUST produce identical acceptance outcomes for
-        identical artifacts.
+        Proof verification MUST be deterministic: canonicalization input, signature/proof
+        verification input, and verification method resolution MUST produce identical acceptance
+        outcomes for identical artifacts.
+      </p>
+      <p>
+        A valid signature/proof already binds the integrity of canonicalized token content.
+        Standalone content-hash claims are protocol overhead in this version and MUST be ignored
+        for acceptance, conflict detection, and merge decisions.
       </p>
     </section>
 
@@ -997,8 +1004,8 @@
             <td>Canonicalization cannot be completed deterministically.</td>
           </tr>
           <tr>
-            <td><code>ERR_DIGEST_MISMATCH</code></td>
-            <td>Digest tuple or hash-chain commitment does not match recomputed value.</td>
+            <td><code>ERR_TOKEN_CHAIN_LINK_INVALID</code></td>
+            <td>Directed linear token linkage does not fit accepted history constraints.</td>
           </tr>
           <tr>
             <td><code>ERR_UNSUPPORTED_CRYPTOSUITE</code></td>
@@ -1009,8 +1016,12 @@
             <td>Cryptographic proof verification returns invalid.</td>
           </tr>
           <tr>
-            <td><code>ERR_HISTORY_DIVERGENCE_UNRESOLVED</code></td>
-            <td>Multiple heads persist without a valid merge event under profile rules.</td>
+            <td><code>ERR_ROTATION_CHAIN_INVALID</code></td>
+            <td>Verification method rotation is not valid under declared chain rules.</td>
+          </tr>
+          <tr>
+            <td><code>ERR_HISTORY_CONFLICT</code></td>
+            <td>Conflicting candidate history cannot be accepted or reconciled.</td>
           </tr>
           <tr>
             <td><code>ERR_POLICY_INPUT_UNAVAILABLE</code></td>
@@ -1040,7 +1051,7 @@
         <h3>Event-Log Properties</h3>
         <p>
           Referenced mechanisms such as CEL and did:webvh converge on the same core
-          properties: canonical bytes before hashing/signing, hash-linked history, explicit proof
+          properties: canonical bytes before signing, directed linear history, explicit proof
           material, and retrieval-portable verification.
           <a href="#ref-cel">[CEL]</a>
           <a href="#ref-didwebvh">[DID-WEBVH]</a>
@@ -1121,7 +1132,7 @@
           tamper-evidence guarantees.
         </li>
         <li>
-          Fetching from multiple hosts improves availability but requires strict digest/proof
+          Fetching from multiple hosts improves availability but requires strict token-chain/proof
           checks on all fetched variants.
         </li>
         <li>
@@ -1134,7 +1145,7 @@
     <section id="privacy-considerations">
       <h2>Privacy Considerations</h2>
       <ul>
-        <li>Event payloads SHOULD minimize personal data and prefer digest references.</li>
+        <li>Event payloads SHOULD minimize personal data and prefer scoped or blinded references.</li>
         <li>
           Globally stable identifiers can be highly linkable; profiles SHOULD define scoped or
           blinded derivations when compatibility permits.
