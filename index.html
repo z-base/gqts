@@ -65,6 +65,44 @@
         padding: 0.1rem 0.35rem;
         font-size: 0.85em;
       }
+
+      .gqts-visual-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1rem;
+        margin-top: 0.8rem;
+      }
+
+      .gqts-visual-card {
+        border: 1px solid #bfd1e1;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #f8fbff 0%, #f2f7fb 100%);
+        box-shadow: 0 1px 2px rgba(16, 34, 54, 0.08);
+        padding: 0.85rem 0.95rem;
+      }
+
+      .gqts-figure-title {
+        margin: 0 0 0.5rem;
+        font-size: 1.08rem;
+        font-weight: 650;
+        color: #12395f;
+      }
+
+      .gqts-visual-svg {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+        background: #ffffff;
+        border: 1px solid #d7e2ec;
+      }
+
+      .gqts-caption {
+        margin-top: 0.55rem;
+        font-size: 0.95em;
+        line-height: 1.45;
+        color: #2d4157;
+        font-style: normal;
+      }
     </style>
   </head>
   <body>
@@ -204,7 +242,7 @@
     </section>
 
     <section id="cross-spec-integration">
-      <h2>Cross-Spec Integration</h2>
+      <h2>Framework Interaction</h2>
       <p>
         GQTS Core is the publication and verifier-retrieval substrate used by GIDAS component
         artifacts. GDIS defines identity-binding evidence objects
@@ -213,6 +251,100 @@
         and deterministic verification behavior for those artifacts without redefining their
         component-specific semantics.
       </p>
+
+      <p class="informative">
+        The following figures are informative presentation aids and do not define additional
+        conformance requirements.
+      </p>
+      <div class="gqts-visual-grid informative">
+          <figure class="gqts-visual-card">
+            <p class="gqts-figure-title">Framework Interaction</p>
+            <svg
+              class="gqts-visual-svg"
+              viewBox="0 0 760 250"
+              role="img"
+              aria-labelledby="framework-interaction-figure-title framework-interaction-figure-desc"
+            >
+              <title id="framework-interaction-figure-title">Framework interaction model</title>
+              <desc id="framework-interaction-figure-desc">
+                GDIS and GQSCD evidence flow into GQTS publication and retrieval. Verifiers run
+                deterministic checks and separate policy outputs.
+              </desc>
+              <rect x="24" y="30" width="180" height="58" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
+              <text x="114" y="56" text-anchor="middle" font-size="14" fill="#173a69">GDIS Evidence</text>
+              <text x="114" y="74" text-anchor="middle" font-size="12" fill="#173a69">Identity Binding</text>
+              <rect x="24" y="152" width="180" height="58" rx="8" fill="#fff0e6" stroke="#b95f24" />
+              <text x="114" y="178" text-anchor="middle" font-size="14" fill="#7a3e14">GQSCD Evidence</text>
+              <text x="114" y="196" text-anchor="middle" font-size="12" fill="#7a3e14">Device Assurance</text>
+              <rect x="286" y="90" width="196" height="66" rx="8" fill="#ebf9ef" stroke="#287a4b" />
+              <text x="384" y="118" text-anchor="middle" font-size="14" fill="#1f5f3b">GQTS Core</text>
+              <text x="384" y="136" text-anchor="middle" font-size="12" fill="#1f5f3b">Publish + Replicate + Retrieve</text>
+              <rect x="556" y="42" width="176" height="58" rx="8" fill="#f4f5f8" stroke="#545f73" />
+              <text x="644" y="67" text-anchor="middle" font-size="14" fill="#2e3441">Verifier</text>
+              <text x="644" y="85" text-anchor="middle" font-size="12" fill="#2e3441">Mechanical Validity</text>
+              <rect x="556" y="152" width="176" height="58" rx="8" fill="#f9f2fb" stroke="#7a3e8f" />
+              <text x="644" y="177" text-anchor="middle" font-size="14" fill="#5a2d6a">Policy Layer</text>
+              <text x="644" y="195" text-anchor="middle" font-size="12" fill="#5a2d6a">Recognition Status</text>
+              <path d="M204 59 L286 112" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <path d="M204 181 L286 134" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <path d="M482 123 L556 71" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <path d="M482 123 L556 181" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <polygon points="282,109 292,112 285,119" fill="#4d647d" />
+              <polygon points="282,136 292,134 285,127" fill="#4d647d" />
+              <polygon points="552,74 561,68 559,79" fill="#4d647d" />
+              <polygon points="552,179 561,184 559,173" fill="#4d647d" />
+            </svg>
+            <figcaption class="gqts-caption">
+              GQTS defines the shared publication substrate; component evidence semantics remain in
+              GDIS and GQSCD.
+            </figcaption>
+          </figure>
+
+          <figure class="gqts-visual-card">
+            <p class="gqts-figure-title">Publication and Verification Loop</p>
+            <svg
+              class="gqts-visual-svg"
+              viewBox="0 0 760 250"
+              role="img"
+              aria-labelledby="publish-loop-title publish-loop-desc"
+            >
+              <title id="publish-loop-title">Publication and verification loop</title>
+              <desc id="publish-loop-desc">
+                Event submission is validated, appended, retrieved with head checks, and verified
+                deterministically before policy output.
+              </desc>
+              <rect x="34" y="92" width="136" height="60" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
+              <text x="102" y="117" text-anchor="middle" font-size="13" fill="#173a69">Submit Event</text>
+              <text x="102" y="135" text-anchor="middle" font-size="12" fill="#173a69">POST ingest</text>
+              <rect x="206" y="92" width="146" height="60" rx="8" fill="#ebf9ef" stroke="#287a4b" />
+              <text x="279" y="117" text-anchor="middle" font-size="13" fill="#1f5f3b">Validate</text>
+              <text x="279" y="135" text-anchor="middle" font-size="12" fill="#1f5f3b">Schema + Proof</text>
+              <rect x="388" y="92" width="146" height="60" rx="8" fill="#fff6e8" stroke="#9d6a22" />
+              <text x="461" y="117" text-anchor="middle" font-size="13" fill="#7a5319">Append Log</text>
+              <text x="461" y="135" text-anchor="middle" font-size="12" fill="#7a5319">Head updated</text>
+              <rect x="570" y="42" width="154" height="60" rx="8" fill="#f4f5f8" stroke="#545f73" />
+              <text x="647" y="67" text-anchor="middle" font-size="13" fill="#2e3441">Head Compare</text>
+              <text x="647" y="85" text-anchor="middle" font-size="12" fill="#2e3441">cheap divergence check</text>
+              <rect x="570" y="152" width="154" height="60" rx="8" fill="#f9f2fb" stroke="#7a3e8f" />
+              <text x="647" y="177" text-anchor="middle" font-size="13" fill="#5a2d6a">Deterministic Verify</text>
+              <text x="647" y="195" text-anchor="middle" font-size="12" fill="#5a2d6a">Mechanical + Policy</text>
+              <path d="M170 122 L206 122" stroke="#4d647d" stroke-width="2.1" />
+              <path d="M352 122 L388 122" stroke="#4d647d" stroke-width="2.1" />
+              <path d="M534 122 L570 72" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <path d="M534 122 L570 182" stroke="#4d647d" stroke-width="2.1" fill="none" />
+              <path d="M647 102 L647 152" stroke="#4d647d" stroke-width="1.8" stroke-dasharray="5 4" />
+              <polygon points="202,117 212,122 202,127" fill="#4d647d" />
+              <polygon points="384,117 394,122 384,127" fill="#4d647d" />
+              <polygon points="566,75 574,68 572,79" fill="#4d647d" />
+              <polygon points="566,179 574,186 572,175" fill="#4d647d" />
+              <polygon points="642,148 647,158 652,148" fill="#4d647d" />
+            </svg>
+            <figcaption class="gqts-caption">
+              Invalid input is rejected before append; accepted history is verified through
+              deterministic checks and separated policy processing.
+            </figcaption>
+          </figure>
+        </div>
     </section>
 
     <section id="scope">
@@ -758,6 +890,53 @@
           <a>recognition status</a> from external governance inputs.
         </li>
       </ol>
+      <figure class="gqts-visual-card informative" id="verifier-pipeline-visual">
+        <p><strong>Verifier Pipeline View (Informative)</strong></p>
+        <svg
+          class="gqts-visual-svg"
+          viewBox="0 0 880 210"
+          role="img"
+          aria-labelledby="verifier-pipeline-title verifier-pipeline-desc"
+        >
+          <title id="verifier-pipeline-title">Verifier pipeline</title>
+          <desc id="verifier-pipeline-desc">
+            The verifier resolves descriptors, checks head divergence, fetches missing chain
+            segments, verifies proofs and digests, and emits separate mechanical and policy outputs.
+          </desc>
+          <rect x="18" y="76" width="148" height="58" rx="8" fill="#e7f1ff" stroke="#3f6fb1" />
+          <text x="92" y="100" text-anchor="middle" font-size="13" fill="#173a69">Resolve</text>
+          <text x="92" y="118" text-anchor="middle" font-size="12" fill="#173a69">scheme + service</text>
+          <rect x="192" y="76" width="148" height="58" rx="8" fill="#ebf9ef" stroke="#287a4b" />
+          <text x="266" y="100" text-anchor="middle" font-size="13" fill="#1f5f3b">Compare Heads</text>
+          <text x="266" y="118" text-anchor="middle" font-size="12" fill="#1f5f3b">cheap branch check</text>
+          <rect x="366" y="76" width="162" height="58" rx="8" fill="#fff6e8" stroke="#9d6a22" />
+          <text x="447" y="100" text-anchor="middle" font-size="13" fill="#7a5319">Fetch Missing</text>
+          <text x="447" y="118" text-anchor="middle" font-size="12" fill="#7a5319">chain segments</text>
+          <rect x="554" y="76" width="146" height="58" rx="8" fill="#f4f5f8" stroke="#545f73" />
+          <text x="627" y="100" text-anchor="middle" font-size="13" fill="#2e3441">Verify</text>
+          <text x="627" y="118" text-anchor="middle" font-size="12" fill="#2e3441">schema + digest + proof</text>
+          <rect x="726" y="30" width="136" height="58" rx="8" fill="#e9f6ef" stroke="#2d7b50" />
+          <text x="794" y="54" text-anchor="middle" font-size="13" fill="#1f5f3b">Output A</text>
+          <text x="794" y="72" text-anchor="middle" font-size="12" fill="#1f5f3b">Mechanical Validity</text>
+          <rect x="726" y="122" width="136" height="58" rx="8" fill="#f9f2fb" stroke="#7a3e8f" />
+          <text x="794" y="146" text-anchor="middle" font-size="13" fill="#5a2d6a">Output B</text>
+          <text x="794" y="164" text-anchor="middle" font-size="12" fill="#5a2d6a">Recognition Status</text>
+          <path d="M166 105 L192 105" stroke="#4d647d" stroke-width="2.1" />
+          <path d="M340 105 L366 105" stroke="#4d647d" stroke-width="2.1" />
+          <path d="M528 105 L554 105" stroke="#4d647d" stroke-width="2.1" />
+          <path d="M700 105 L726 59" stroke="#4d647d" stroke-width="2.1" fill="none" />
+          <path d="M700 105 L726 151" stroke="#4d647d" stroke-width="2.1" fill="none" />
+          <polygon points="188,100 198,105 188,110" fill="#4d647d" />
+          <polygon points="362,100 372,105 362,110" fill="#4d647d" />
+          <polygon points="550,100 560,105 550,110" fill="#4d647d" />
+          <polygon points="721,61 730,54 728,65" fill="#4d647d" />
+          <polygon points="721,149 730,156 728,145" fill="#4d647d" />
+        </svg>
+        <figcaption class="gqts-caption">
+          This figure summarizes the algorithmic step order; normative processing behavior remains
+          defined by the textual algorithm above.
+        </figcaption>
+      </figure>
       <p>
         Trust decisions MUST consume both outputs. A positive mechanical result without an
         accepted governance source yields cryptographic validity only.
