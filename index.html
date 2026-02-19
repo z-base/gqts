@@ -188,17 +188,31 @@
         </li>
         <li>
           <strong>GDIS</strong> (Global Digital Identity Scheme) is a component under GIDAS for
-          physical-to-digital identity binding artifacts.
+          physical-to-digital identity binding artifacts
+          <a href="#ref-gdis-core">[GDIS-CORE]</a>.
         </li>
         <li>
           <strong>GQSCD</strong> (Globally Qualified Signature Creation Device) is a component
-          under GIDAS for device/controller assurance evidence.
+          under GIDAS for device/controller assurance evidence
+          <a href="#ref-gqscd-core">[GQSCD-CORE]</a>.
         </li>
         <li>
           <strong>GQTS Core</strong> (this specification) is the shared publication and
           replication substrate for verifier-checkable trust-service evidence.
         </li>
       </ul>
+    </section>
+
+    <section id="cross-spec-integration">
+      <h2>Cross-Spec Integration</h2>
+      <p>
+        GQTS Core is the publication and verifier-retrieval substrate used by GIDAS component
+        artifacts. GDIS defines identity-binding evidence objects
+        <a href="#ref-gdis-core">[GDIS-CORE]</a>, and GQSCD defines device/controller assurance
+        evidence objects <a href="#ref-gqscd-core">[GQSCD-CORE]</a>. GQTS defines host, event-log,
+        and deterministic verification behavior for those artifacts without redefining their
+        component-specific semantics.
+      </p>
     </section>
 
     <section id="scope">
@@ -279,6 +293,16 @@
           <a href="#schema-GovernanceCode">`GovernanceCode`</a>.
         </dd>
       </dl>
+    </section>
+
+    <section id="data-model-semantics">
+      <h2>Data Model Semantics Baseline</h2>
+      <p>
+        JSON payload semantics in this specification follow RFC 8259
+        <a href="#ref-rfc8259">[RFC8259]</a>. Data-model terms such as list, set, tuple, and byte
+        sequence follow WHATWG Infra terminology unless a profile states an explicit override
+        <a href="#ref-infra">[INFRA]</a>.
+      </p>
     </section>
 
     <section id="openapi-surface">
@@ -583,6 +607,12 @@
           Statements about legal effect are constrained to this section. GQTS Core does not
           define legal recognition; it defines technical evidence and verification behavior.
         </p>
+        <p>
+          Compatibility profiling and assessment workflows MAY map conformance evidence to ETSI
+          trust-service policy and assessment baselines where applicable
+          <a href="#ref-etsi-319401">[ETSI-319401]</a>. Such mapping does not change cryptographic
+          verification outcomes defined by this specification.
+        </p>
       </section>
 
       <section id="mandate-rfc8615">
@@ -637,9 +667,17 @@
         <h3>Tamper-Evident History Invariants</h3>
         <ul>
           <li>History MUST be append-only; corrections are new events.</li>
+          <li>
+            This version defines no history-compaction mechanism; accepted events and proof
+            material remain verification inputs while they are published by the controller.
+          </li>
           <li>Divergence MUST be detectable through differing head commitments.</li>
           <li>
             Merge MUST be explicit: a merge is represented as a new event referencing parent heads.
+          </li>
+          <li>
+            Each accepted event MUST be independently retrievable and verifiable by event identifier
+            (no opaque chunk-only verification mode in this version).
           </li>
           <li>
             Verification MUST be mechanical: canonicalization, digest-linking, and proof checks are
@@ -657,6 +695,12 @@
           Replication is open participation: any origin MAY host and gossip GQTS material.
           Governance profiles MAY define minimum publication targets, but MUST NOT define a
           maximum or exclusive host set by schema.
+        </p>
+        <p>
+          Admission control is protocol-validity based: hosts MUST validate incoming event objects
+          against applicable OpenAPI schema constraints and proof-verification requirements before
+          acceptance. Invalid entries MUST be rejected and MUST NOT be merged into accepted
+          history.
         </p>
       </section>
 
@@ -806,7 +850,8 @@
       <p>
         GQTS is the reusable event-log substrate for framework components that already depend on
         decentralized verifier retrieval under the `/.well-known/gidas/...` namespace, including
-        GDIS and GQSCD artifacts.
+        GDIS and GQSCD artifacts <a href="#ref-gdis-core">[GDIS-CORE]</a>
+        <a href="#ref-gqscd-core">[GQSCD-CORE]</a>.
       </p>
 
       <section id="design-log-primitives">
@@ -826,10 +871,11 @@
       </section>
 
       <section id="design-rfc8615-registration">
-        <h3>Well-Known Registration Work Item</h3>
+        <h3>Well-Known Registration Baseline</h3>
         <p>
-          Deployment profiles using hardcoded `/.well-known/` suffixes SHOULD define and publish a
-          registry strategy aligned with RFC 8615 and IANA procedures
+          This profile uses the `/.well-known/gidas/` umbrella namespace, with GQTS resources under
+          `/.well-known/gidas/gqts/`. Deployments using this namespace SHOULD follow RFC 8615 and
+          IANA well-known registration procedures
           <a href="#ref-rfc8615">[RFC8615]</a>
           <a href="#ref-iana-wku">[IANA-WKU]</a>.
         </p>
@@ -918,22 +964,12 @@
       </ul>
     </section>
 
-    <section id="open-issues" class="informative">
-      <h2>Pending Specification Work</h2>
-      <p class="issue">
-        Decide final IANA well-known suffix strategy (`gidas` umbrella path versus `gqts`
-        direct suffix) before broad hardcoded deployment.
-      </p>
-      <p class="issue">
-        Define v1 event chunking profile details and proof requirements for very large histories.
-      </p>
-      <p class="issue">
-        Define anti-spam/admission strategy for open gossip without introducing closed host
-        governance by default.
-      </p>
-      <p class="issue">
-        Define deterministic event-history compaction and long-range proof availability
-        requirements.
+    <section id="implementation-status-note" class="informative">
+      <h2>Implementation Status Note</h2>
+      <p>
+        A reference implementation and API-focused example set for GQTS Core is in active
+        development. This note is informative only and does not alter conformance requirements in
+        this document or in <a href="./openapi.yaml">`openapi.yaml`</a>.
       </p>
     </section>
 
@@ -958,6 +994,11 @@
               >[RFC6838] Media Type Specifications and Registration Procedures</a
             >
           </li>
+          <li id="ref-rfc8259">
+            <a href="https://www.rfc-editor.org/rfc/rfc8259"
+              >[RFC8259] The JavaScript Object Notation (JSON) Data Interchange Format</a
+            >
+          </li>
           <li id="ref-rfc8615">
             <a href="https://www.rfc-editor.org/rfc/rfc8615"
               >[RFC8615] Well-Known Uniform Resource Identifiers (URIs)</a
@@ -975,6 +1016,9 @@
             <a href="https://spec.openapis.org/oas/v3.1.2.html"
               >[OPENAPI-3.1.2] OpenAPI Specification v3.1.2</a
             >
+          </li>
+          <li id="ref-infra">
+            <a href="https://infra.spec.whatwg.org/">[INFRA] WHATWG Infra Standard</a>
           </li>
           <li id="ref-iana-wku">
             <a href="https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml"
@@ -1036,8 +1080,8 @@
             >
           </li>
           <li id="ref-eidas-consolidated">
-            <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02014R0910-20241018"
-              >[EU-910-CONS] eIDAS consolidated text</a
+            <a href="https://eur-lex.europa.eu/eli/reg/2014/910/2024-10-18/eng"
+              >[EU-910-CONS] Regulation (EU) No 910/2014 consolidated view (ELI)</a
             >
           </li>
           <li id="ref-eu-2024-1183">
@@ -1048,6 +1092,12 @@
           <li id="ref-eu-trusted-lists">
             <a href="https://digital-strategy.ec.europa.eu/en/policies/eu-trusted-lists"
               >[EU-TRUSTED-LISTS] EU Trusted Lists</a
+            >
+          </li>
+          <li id="ref-etsi-319401">
+            <a href="https://www.etsi.org/deliver/etsi_en/319400_319499/319401/"
+              >[ETSI-319401] ETSI EN 319 401 Electronic Signatures and Infrastructures (ESI);
+              General Policy Requirements for Trust Service Providers</a
             >
           </li>
         </ul>
