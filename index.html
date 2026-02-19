@@ -658,7 +658,7 @@
         </p>
         <p>
           `<kind>` is an enumerated token set: `type`, `event`, `scheme`. `<id>` is either a
-          UUID-like service/log identifier or a governance-scoped identifier validated by
+          UUID-like service/log identifier or a <a>governance code</a> value validated by
           <a href="#schema-GovernanceCode">`GovernanceCode`</a>.
         </p>
       </section>
@@ -673,7 +673,8 @@
           </li>
           <li>Divergence MUST be detectable through differing head commitments.</li>
           <li>
-            Merge MUST be explicit: a merge is represented as a new event referencing parent heads.
+            Merge MUST be explicit: a merge is represented as a new <a>merge event</a> referencing
+            parent heads.
           </li>
           <li>
             Each accepted event MUST be independently retrievable and verifiable by event identifier
@@ -684,7 +685,8 @@
             deterministic.
           </li>
           <li>
-            Hosts MUST NOT trigger heavy merge work unless a head digest mismatch is detected.
+            Hosts MUST NOT trigger heavy merge work unless a <a>head digest</a> mismatch is
+            detected.
           </li>
         </ul>
       </section>
@@ -692,7 +694,8 @@
       <section id="replication-open-participation">
         <h3>Open Participation Replication</h3>
         <p>
-          Replication is open participation: any origin MAY host and gossip GQTS material.
+          Replication is open participation: any origin MAY operate as a <a>GQTS host</a> and
+          gossip GQTS material.
           Governance profiles MAY define minimum publication targets, but MUST NOT define a
           maximum or exclusive host set by schema.
         </p>
@@ -731,7 +734,7 @@
       <h2>Mechanical Verifier Algorithm</h2>
       <ol>
         <li>
-          Resolve service and scheme metadata using
+          Resolve <a>service descriptor</a> and <a>scheme descriptor</a> metadata using
           <a href="#op-getTypeDescriptor"><code>getTypeDescriptor</code></a> and
           <a href="#op-getSchemeDescriptor"><code>getSchemeDescriptor</code></a>.
         </li>
